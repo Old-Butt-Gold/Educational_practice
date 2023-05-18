@@ -1,9 +1,11 @@
 object AddForm: TAddForm
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize, biHelp]
+  BorderStyle = bsSingle
   Caption = 'Add Team'
-  ClientHeight = 456
-  ClientWidth = 750
+  ClientHeight = 319
+  ClientWidth = 472
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,10 +15,32 @@ object AddForm: TAddForm
   OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 23
-  object LabeledEdit1: TLabeledEdit
+  object InfoLabel: TLabel
+    Left = 0
+    Top = 0
+    Width = 472
+    Height = 23
+    Align = alTop
+    Alignment = taCenter
+    Caption = #1048#1085#1092#1086#1088#1084#1072#1094#1080#1103' '#1086' '#1082#1086#1084#1072#1085#1076#1077
+    ExplicitWidth = 208
+  end
+  object SBRefresh: TSpeedButton
+    Left = 320
+    Top = 208
+    Width = 113
+    Height = 93
+    ImageIndex = 0
+    Images = MainForm.ImageList1
+    Flat = True
+    ParentShowHint = False
+    ShowHint = False
+    OnClick = SpeedButtonClick
+  end
+  object TeamNameEdit: TLabeledEdit
     Left = 176
-    Top = 46
-    Width = 217
+    Top = 37
+    Width = 257
     Height = 31
     Alignment = taCenter
     EditLabel.Width = 166
@@ -29,9 +53,9 @@ object AddForm: TAddForm
     OnKeyDown = LabeledEditKeyDown
     OnKeyPress = StrKeyPress
   end
-  object LabeledEdit2: TLabeledEdit
+  object TeamCodeEdit: TLabeledEdit
     Left = 176
-    Top = 112
+    Top = 88
     Width = 121
     Height = 31
     Alignment = taCenter
@@ -45,10 +69,10 @@ object AddForm: TAddForm
     OnKeyDown = LabeledEditKeyDown
     OnKeyPress = NumberPress
   end
-  object LabeledEdit3: TLabeledEdit
+  object TeamCountryEdit: TLabeledEdit
     Left = 176
-    Top = 168
-    Width = 217
+    Top = 133
+    Width = 257
     Height = 31
     Alignment = taCenter
     EditLabel.Width = 144
@@ -61,9 +85,9 @@ object AddForm: TAddForm
     OnKeyDown = LabeledEditKeyDown
     OnKeyPress = StrKeyPress
   end
-  object LabeledEdit4: TLabeledEdit
+  object TeamRankEdit: TLabeledEdit
     Left = 176
-    Top = 224
+    Top = 184
     Width = 121
     Height = 31
     Alignment = taCenter
@@ -77,27 +101,28 @@ object AddForm: TAddForm
     OnKeyDown = LabeledEditKeyDown
     OnKeyPress = NumberPress
   end
-  object BitBtn1: TBitBtn
-    Left = 168
-    Top = 288
+  object AddBtn: TBitBtn
+    Left = 24
+    Top = 240
     Width = 145
     Height = 49
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100
     Enabled = False
-    Kind = bkOK
+    Kind = bkYes
     NumGlyphs = 2
     TabOrder = 4
+    OnClick = AddBtnClick
   end
-  object CheckListBox1: TCheckListBox
-    Left = 488
-    Top = 46
-    Width = 121
-    Height = 97
-    ItemHeight = 23
-    Items.Strings = (
-      'meow')
+  object ChangeBtn: TBitBtn
+    Left = 24
+    Top = 240
+    Width = 145
+    Height = 49
+    Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+    Kind = bkYes
+    NumGlyphs = 2
     TabOrder = 5
-    OnKeyUp = CheckListBox1KeyUp
-    OnMouseDown = CheckListBox1MouseDown
+    Visible = False
+    OnClick = ChangeBtnClick
   end
 end

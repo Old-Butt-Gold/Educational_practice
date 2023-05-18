@@ -12,6 +12,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Tablet Dark');
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TAddForm, AddForm);
   Application.Run;

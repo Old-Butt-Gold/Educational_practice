@@ -1,0 +1,172 @@
+unit Unit1;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls,
+  Vcl.Buttons, MainUnit, Vcl.CheckLst, Vcl.ComCtrls;
+
+type
+  TAddForm = class(TForm)
+    TeamNameEdit: TLabeledEdit;
+    TeamCodeEdit: TLabeledEdit;
+    TeamCountryEdit: TLabeledEdit;
+    TeamRankEdit: TLabeledEdit;
+    AddBtn: TBitBtn;
+    InfoLabel: TLabel;
+    SBRefresh: TSpeedButton;
+    ChangeBtn: TBitBtn;
+    procedure StrKeyPress(Sender: TObject; var Key: Char);
+    procedure LabeledEditChange(Sender: TObject);
+    procedure NumberPress(Sender: TObject; var Key: Char);
+    procedure LabeledEditKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure SpeedButtonClick(Sender: TObject);
+    procedure AddBtnClick(Sender: TObject);
+    Procedure ClearEdits;
+    Function NormalizeString(const AStr: String): String;
+    procedure ChangeBtnClick(Sender: TObject);
+    Procedure SetTeamFields(Temp: PTeam);
+  private
+      FStartArr: TArrPlayer;
+      FCurrentCode: Integer;
+  public
+      Property CurrentCode: Integer Read FCurrentCode Write FCurrentCode;
+  end;
+
+var
+    AddForm: TAddForm;
+
+implementation
+
+{$R *.dfm}
+
+procedure TAddForm.NumberPress(Sender: TObject; var Key: Char);
+Var
+    CursorPosition, NewCursorPosition: Integer;
+    TempAll, TempSelected, TempBeforeCursor, TempAfterCursor: String;
+begin
+    If Not(Key In ['0'..'9', #08]) Then
+        Key := #0;
+    NewCursorPosition := Length(TEdit(Sender).Text) - Length(TEdit(Sender).SelText);
+    TempSelected := TEdit(Sender).SelText;
+    TempAll := TEdit(Sender).Text;
+    CursorPosition := TEdit(Sender).SelStart;
+    If (TEdit(Sender).SelStart = 0) and (TEdit(Sender).SelLength < TEdit(Sender).GetTextLen) and (Key = '0') Then
+        Key := #0;
+    If (Key <> #0) and (TempSelected <> '') Then
+        Begin
+            Try
+                Delete(TempAll, CursorPosition + 1, Length(TempSelected));
+                Insert(Key, TempAll, CursorPosition + 1);
+                If (StrToInt(TempAll) < 1) or (StrToInt(TempAll) > 9999) Then
+                  Key := #0
+                Else
+                    Begin
+                        TEdit(Sender).Text := TempAll;
+                        TEdit(Sender).SelStart := NewCursorPosition + 1;
+                        Key := #0;
+                    End;
+            Except
+                Key := #0;
+            End;
+        End;
+    TempBeforeCursor := Copy(TEdit(Sender).Text, 1, TEdit(Sender).SelStart);
+    TempAfterCursor := Copy(TEdit(Sender).Text, TEdit(Sender).SelStart + 1, TEdit(Sender).GetTextLen);
+    //SelStart идет с 0
+    If (Key <> #0) and (Key <> #08) and ((StrToInt(TempBeforeCursor + Key + TempAfterCursor) < 1) or (StrToInt(TempBeforeCursor + Key + TempAfterCursor) > 9999)) Then
+        Key := #0;
+end;
+
+procedure TAddForm.LabeledEditKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (Shift = [ssCtrl]) and (Key = Ord('A')) then
+        TLabeledEdit(Sender).SelectAll;
+end;
+
+procedure TAddForm.ChangeBtnClick(Sender: TObject);
+begin
+    SetTeamFields(MainForm.FindTeamByCode(FCurrentCode));
+    ClearEdits;
+    Self.Close;
+    ModalResult := AddBtn.ModalResult;
+end;
+
+Procedure TAddForm.SetTeamFields(Temp: PTeam);
+Begin
+    Temp^.Info.Data.Name := NormalizeString(TeamNameEdit.Text);
+    Temp^.Info.Data.Country := NormalizeString(TeamCountryEdit.Text);
+    Temp^.Info.Data.Code := StrToInt(TeamCodeEdit.Text);
+    Temp^.Info.Data.Rank := StrToInt(TeamRankEdit.Text);
+End;
+
+procedure TAddForm.ClearEdits;
+Begin
+    TeamNameEdit.Clear;
+    TeamCodeEdit.Clear;
+    TeamCountryEdit.Clear;
+    TeamRankEdit.Clear;
+End;
+
+procedure TAddForm.SpeedButtonClick(Sender: TObject);
+begin
+    ClearEdits;
+    Self.ActiveControl := nil
+end;
+
+Function TAddForm.NormalizeString(const AStr: String): String;
+Var
+    LowerStr, RestOfString: String;
+    FirstLetter: String[1];
+Begin
+    LowerStr := AnsiLowerCase(AStr);
+    FirstLetter := AnsiUpperCase(Copy(LowerStr, 1, 1));
+    RestOfString := Copy(LowerStr, 2, Length(LowerStr) - 1);
+    NormalizeString := FirstLetter + RestOfString;
+End;
+
+procedure TAddForm.AddBtnClick(Sender: TObject);
+Var
+    Temp: PTeam;
+begin
+    New(Temp);
+    SetTeamFields(Temp);
+    Temp^.Info.TeamPlayers := FStartArr;
+    Temp^.Next := Nil;
+    MainForm.InsertInList(Temp^);
+    ClearEdits;
+    Dispose(Temp);
+    Self.Close;
+    ModalResult := AddBtn.ModalResult;
+end;
+
+procedure TAddForm.LabeledEditChange(Sender: TObject);
+Var
+    I: Integer;
+begin
+    AddBtn.Enabled := (TeamNameEdit.GetTextLen > 0) and (TeamCodeEdit.GetTextLen > 0) and
+    (TeamCountryEdit.GetTextLen > 0) and (TeamRankEdit.GetTextLen > 0);
+    If (TLabeledEdit(Sender).GetTextLen > 0) and (TLabeledEdit(Sender).Text[1] = '0') then
+    begin
+        I := 1;
+        While TLabeledEdit(Sender).Text[I] = '0' do
+            Inc(I);
+        TLabeledEdit(Sender).Text := Copy(TLabeledEdit(Sender).Text, I, TLabeledEdit(Sender).GetTextLen - I + 1);
+    end;
+end;
+
+procedure TAddForm.StrKeyPress(Sender: TObject; var Key: Char);
+begin
+    If (TEdit(Sender).SelLength > 0) and Not((Key < #192) and (Key <> #08)) Then
+        TEdit(Sender).SelText := #0;
+    If (Key < #192) and (Key <> #08) Then
+        Key := #0;
+    If (Key = '№') Then
+        Key := #0;
+    If (Length(TEdit(Sender).Text) = 25) and (Key <> #08) Then
+        Key := #0;
+end;
+
+end.

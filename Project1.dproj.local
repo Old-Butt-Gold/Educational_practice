@@ -1,17 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <BorlandProject>
 	<Transactions>
-    <Transaction>1899.12.30 00:00:00.000.412,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.819,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.035,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.155,D:\Учебная практика 1 курс\Project1.dproj=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Project1.dproj</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.668,D:\Учебная практика 1 курс\Unit1.pas=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.449,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.668,D:\Учебная практика 1 курс\Unit1.dfm=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.dfm</Transaction>
-    <Transaction>1899.12.30 00:00:00.000.438,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
     <Transaction>1899.12.30 00:00:00.000.247,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
-    <Transaction>2023.05.18 19:23:20.817,D:\Учебная практика 1 курс\MainUnit.dfm=D:\Учебная практика 1 курс\Unit1.dfm</Transaction>
-    <Transaction>2023.05.18 19:23:20.817,D:\Учебная практика 1 курс\MainUnit.pas=D:\Учебная практика 1 курс\Unit1.pas</Transaction>
-    <Transaction>2023.05.18 19:25:10.480,=D:\Учебная практика 1 курс\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.438,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.449,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.817,D:\Учебная практика 1 курс\Unit1.pas=D:\Учебная практика 1 курс\MainUnit.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.480,=D:\Учебная практика 1 курс\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.668,C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.dfm=D:\Учебная практика 1 курс\Unit1.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.819,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.155,C:\Users\andre\Documents\Embarcadero\Studio\Projects\Project1.dproj=D:\Учебная практика 1 курс\Project1.dproj</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.817,D:\Учебная практика 1 курс\Unit1.dfm=D:\Учебная практика 1 курс\MainUnit.dfm</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.668,C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas=D:\Учебная практика 1 курс\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.412,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>1899.12.30 00:00:00.000.035,=C:\Users\andre\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
   </Transactions>
 </BorlandProject>

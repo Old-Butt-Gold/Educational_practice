@@ -9,29 +9,34 @@ uses
 
 type
   TAddForm = class(TForm)
-    LabeledEdit1: TLabeledEdit;
-    LabeledEdit2: TLabeledEdit;
-    LabeledEdit3: TLabeledEdit;
-    LabeledEdit4: TLabeledEdit;
-    BitBtn1: TBitBtn;
-    CheckListBox1: TCheckListBox;
+    TeamNameEdit: TLabeledEdit;
+    TeamCodeEdit: TLabeledEdit;
+    TeamCountryEdit: TLabeledEdit;
+    TeamRankEdit: TLabeledEdit;
+    AddBtn: TBitBtn;
+    InfoLabel: TLabel;
+    SBRefresh: TSpeedButton;
+    ChangeBtn: TBitBtn;
     procedure StrKeyPress(Sender: TObject; var Key: Char);
     procedure LabeledEditChange(Sender: TObject);
     procedure NumberPress(Sender: TObject; var Key: Char);
-    procedure CheckListBox1MouseDown(Sender: TObject; Button: TMouseButton;
-      Shift: TShiftState; X, Y: Integer);
-    procedure CheckListBox1KeyUp(Sender: TObject; var Key: Word;
-      Shift: TShiftState);
     procedure LabeledEditKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure SpeedButtonClick(Sender: TObject);
+    procedure AddBtnClick(Sender: TObject);
+    Procedure ClearEdits;
+    Function NormalizeString(const AStr: String): String;
+    procedure ChangeBtnClick(Sender: TObject);
+    Procedure SetTeamFields(Temp: PTeam);
   private
-      FState: Boolean;
+      FStartArr: TArrPlayer;
+      FCurrentCode: Integer;
   public
-
+      Property CurrentCode: Integer Read FCurrentCode Write FCurrentCode;
   end;
 
 var
-  AddForm: TAddForm;
+    AddForm: TAddForm;
 
 implementation
 
@@ -74,18 +79,6 @@ begin
         Key := #0;
 end;
 
-procedure TAddForm.CheckListBox1KeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-    CheckListBox1.Checked[CheckListBox1.ItemIndex] := FState;
-end;
-
-procedure TAddForm.CheckListBox1MouseDown(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-    FState := CheckListBox1.Checked[CheckListBox1.ItemIndex];
-end;
-
 procedure TAddForm.LabeledEditKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -93,12 +86,69 @@ begin
         TLabeledEdit(Sender).SelectAll;
 end;
 
+procedure TAddForm.ChangeBtnClick(Sender: TObject);
+begin
+    SetTeamFields(MainForm.FindTeamByCode(FCurrentCode));
+    ClearEdits;
+    Self.Close;
+end;
+
+Procedure TAddForm.SetTeamFields(Temp: PTeam);
+Begin
+    Temp^.Info.Data.Name := NormalizeString(TeamNameEdit.Text);
+    Temp^.Info.Data.Country := NormalizeString(TeamCountryEdit.Text);
+    Temp^.Info.Data.Code := StrToInt(TeamCodeEdit.Text);
+    Temp^.Info.Data.Rank := StrToInt(TeamRankEdit.Text);
+End;
+
+procedure TAddForm.ClearEdits;
+Begin
+    TeamNameEdit.Clear;
+    TeamCodeEdit.Clear;
+    TeamCountryEdit.Clear;
+    TeamRankEdit.Clear;
+End;
+
+procedure TAddForm.SpeedButtonClick(Sender: TObject);
+begin
+    ClearEdits;
+    Self.ActiveControl := nil
+end;
+
+Function TAddForm.NormalizeString(const AStr: String): String;
+Var
+    LowerStr, RestOfString: String;
+    FirstLetter: String[1];
+Begin
+    LowerStr := AnsiLowerCase(AStr);
+    FirstLetter := AnsiUpperCase(Copy(LowerStr, 1, 1));
+    RestOfString := Copy(LowerStr, 2, Length(LowerStr) - 1);
+    NormalizeString := FirstLetter + RestOfString;
+End;
+
+procedure TAddForm.AddBtnClick(Sender: TObject);
+Var
+    Temp: PTeam;
+begin
+    New(Temp);
+    SetTeamFields(Temp);
+    Temp^.Info.TeamPlayers := FStartArr;
+    Temp^.Next := Nil;
+    MainForm.InsertInList(Temp^);
+    ClearEdits;
+    Dispose(Temp);
+    Self.Close;
+    ModalResult := AddBtn.ModalResult;
+end;
+
 procedure TAddForm.LabeledEditChange(Sender: TObject);
 Var
     I: Integer;
 begin
-    BitBtn1.Enabled := (LabeledEdit1.GetTextLen > 0) and (LabeledEdit2.GetTextLen > 0) and
-    (LabeledEdit3.GetTextLen > 0) and (LabeledEdit4.GetTextLen > 0);
+    AddBtn.Enabled := (TeamNameEdit.GetTextLen > 0) and (TeamCodeEdit.GetTextLen > 0) and
+    (TeamCountryEdit.GetTextLen > 0) and (TeamRankEdit.GetTextLen > 0);
+    ChangeBtn.Enabled := (TeamNameEdit.GetTextLen > 0) and (TeamCodeEdit.GetTextLen > 0) and
+    (TeamCountryEdit.GetTextLen > 0) and (TeamRankEdit.GetTextLen > 0);
     If (TLabeledEdit(Sender).GetTextLen > 0) and (TLabeledEdit(Sender).Text[1] = '0') then
     begin
         I := 1;
@@ -116,7 +166,7 @@ begin
         Key := #0;
     If (Key = '¹') Then
         Key := #0;
-    If (Length(TEdit(Sender).Text) = 30) and (Key <> #08) Then
+    If (Length(TEdit(Sender).Text) = 25) and (Key <> #08) Then
         Key := #0;
 end;
 

@@ -14,8 +14,8 @@ type
 
   TTeam = record
     Code, Rank: Integer; //Код команды
-    Name: String[30];  //Имя команды
-    Country: string[30]; //Страна команды
+    Name: String[25];  //Имя команды
+    Country: string[25]; //Страна команды
     //Номер команды в турнирной таблице
   end;
 
@@ -28,11 +28,15 @@ type
   end;
 
   TArrPlayer = Array [0..10] of TPlayer;
+  TAllInfo = Record
+    Data: TTeam;
+    TeamPlayers: TArrPlayer;
+  End;
+
 
   PTeam = ^TTeamNode;
   TTeamNode = Record
-    Data: TTeam;
-    TeamPlayers: TArrPlayer;
+    Info: TAllInfo;
     Next: PTeam;
   end;
 
@@ -56,8 +60,9 @@ type
     ListView2: TListView;
     PanelPlayers: TPanel;
     Label2: TLabel;
+    ImageList1: TImageList;
     procedure LViewTeamColumnClick(Sender: TObject; Column: TListColumn);
-    Procedure InsertInList(Info: TTeamNode);
+    Procedure InsertInList(InsNode: TTeamNode);
     Procedure RemoveTeam(Code: Integer);
     procedure LViewTeamSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
@@ -67,6 +72,8 @@ type
     procedure LViewTeamKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure BitBtn2Click(Sender: TObject);
+    Procedure AddToListView;
+    Function FindTeamByCode(Code: Integer): PTeam;
   private
       FTeamList: TTeamList;
       FListViewOldWndProc, FPlayerOldWndProc: TWndMethod;
@@ -78,6 +85,8 @@ type
 
 var
   MainForm: TMainForm;
+
+
 
 implementation
 
@@ -124,9 +133,24 @@ begin
     Inherited WndProc(Message);
 end;
 
+Procedure TMainForm.AddToListView;
+Var
+    Item: TListItem;
+Begin
+    Item := LViewTeam.Items.Add;
+    Item.Caption := IntToStr(FTeamList.Tail^.Info.Data.Code);
+    Item.SubItems.Add(FTeamList.Tail^.Info.Data.Name);
+    Item.SubItems.Add(FTeamList.Tail^.Info.Data.Country);
+    Item.SubItems.Add(IntToStr(FTeamList.Tail^.Info.Data.Rank));
+End;
+
 procedure TMainForm.BitBtn2Click(Sender: TObject);
 begin
+    AddForm.ChangeBtn.Visible := False;
+    AddForm.AddBtn.Visible := True;
     AddForm.ShowModal;
+    If AddForm.ModalResult = MrYes Then
+        AddToListView;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -145,40 +169,55 @@ begin
     LViewTeam.Width := LViewTeam.Width - 1;
 end;
 
+Function TMainForm.FindTeamByCode(Code: Integer): PTeam;
+Var
+    CurrentNode: PTeam;
+    IsFounded: Boolean;
+Begin
+    Result := Nil;
+    IsFounded := False;
+    CurrentNode := FTeamList.Head;
+    While (CurrentNode <> nil) and Not(IsFounded) do
+    Begin
+        If CurrentNode^.Info.Data.Code = Code Then
+        Begin
+            IsFounded := True;
+            Result := CurrentNode;
+        End;
+        CurrentNode := CurrentNode^.Next;
+    End;
+End;
+
 Procedure TMainForm.RemoveTeam(Code: Integer);
 Var
     CurrentNode, PreviousNode: PTeam;
 begin
     CurrentNode := FTeamList.Head;
     PreviousNode := nil;
-
-    While (CurrentNode <> nil) and (CurrentNode.Data.Code <> Code) do
+    While (CurrentNode <> nil) and (CurrentNode.Info.Data.Code <> Code) do
     begin
         PreviousNode := CurrentNode;
         CurrentNode := CurrentNode.Next;
     end;
-
     If CurrentNode <> nil then
     begin
         If CurrentNode = FTeamList.Head then
             FTeamList.Head := FTeamList.Head^.Next
         Else
             PreviousNode.Next := CurrentNode^.Next;
-
         If CurrentNode = FTeamList.Tail then
             FTeamList.Tail := PreviousNode;
-
-      Dispose(CurrentNode);
+        Dispose(CurrentNode);
     end;
 end;
 
-procedure TMainForm.InsertInList(Info: TTeamNode);
+procedure TMainForm.InsertInList(InsNode: TTeamNode);
 Var
     NewNode: PTeam;
 begin
     New(NewNode);
-    NewNode^.Data := Info.Data;
-    NewNode^.TeamPlayers := Info.TeamPlayers;
+    NewNode^.Info.Data := InsNode.Info.Data;
+    NewNode^.Info.TeamPlayers := InsNode.Info.TeamPlayers;
     NewNode^.Next := nil;
     If FTeamList.Head = nil Then
     Begin
@@ -204,7 +243,14 @@ begin
     Item := LViewTeam.Selected;
     If Assigned(Item) and Item.Selected then
     begin
-        ShowMessage('Meow');
+        AddForm.CurrentCode := StrToInt(Item.Caption);
+        AddForm.TeamNameEdit.Text := Item.SubItems.Strings[0];
+        AddForm.TeamCodeEdit.Text := Item.Caption;
+        AddForm.TeamCountryEdit.Text := Item.SubItems.Strings[1];
+        AddForm.TeamRankEdit.Text := Item.SubItems.Strings[2];
+        AddForm.AddBtn.Visible := False;
+        AddForm.ChangeBtn.Visible := True;
+        AddForm.ShowModal;
       // ячейка была выбрана
       // выполнить необходимые действия
     end;
@@ -215,8 +261,11 @@ procedure TMainForm.LViewTeamKeyDown(Sender: TObject; var Key: Word;
 begin
     //Var X := LViewTeam.Selected.Caption; //код команды
     If (Key = VK_DELETE) and (LViewTeam.ItemIndex <> -1) and
-    (MessageBox(MainForm.Handle, 'Вы хотите удалить данную команду?', 'Удаление', MB_YESNO + MB_ICONQUESTION) = ID_YES)Then
+    (MessageBox(MainForm.Handle, 'Вы хотите удалить данную команду?', 'Удаление', MB_YESNO + MB_ICONQUESTION) = ID_YES) Then
+    Begin
+        RemoveTeam(StrToInt(LViewTeam.Selected.Caption));
         LViewTeam.Delete(LViewTeam.Selected);
+    End;
 end;
 
 procedure TMainForm.LViewTeamSelectItem(Sender: TObject; Item: TListItem;
