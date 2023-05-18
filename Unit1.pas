@@ -4,240 +4,120 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.CustomizeDlg,
-  Vcl.ToolWin, Vcl.ActnMan, Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ActnColorMaps,
-  Vcl.Mask, Vcl.ExtCtrls, Vcl.Buttons, Vcl.CheckLst, Vcl.CategoryButtons,
-  Vcl.ButtonGroup, Vcl.ComCtrls, Vcl.JumpList, CommCtrl, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, Vcl.ControlList, System.ImageList, Vcl.ImgList;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls,
+  Vcl.Buttons, MainUnit, Vcl.CheckLst, Vcl.ComCtrls;
 
 type
-
-  TTeam = record
-    Code: Integer; //Код команды
-    Name: string;  //Имя команды
-    Country: string; //Страна команды
-    Rank: Integer;   //Номер команды в турнирной таблице
-  end;
-
-  TPlayer = record
-    FullName: string; //Полное имя футболиста
-    Code: Integer; //Код игрока (эквивалентно выше)
-    Position: string;  //Амплуа игрока
-    PenaltyPoints: Integer; //Штрафные очки
-    GoalsScored: Integer;  //Количество забитых голов или переданных пасов
-  end;
-
-  PTeam = ^TTeamNode;
-  TTeamNode = Record
-    Data: TTeam;
-    TeamPlayers: Array [0..10] of TPlayer;
-    Next: PTeam;
-  end;
-
-  TTeamList = record
-    Head: PTeam;
-    Tail: PTeam;
-  end;
-  
-  TListView = class(Vcl.ComCtrls.TListView)
-  protected
-      procedure WndProc(var Message: TMessage); override;
-  end;
-  
-  TMainForm = class(TForm)
-    MaskEdit1: TMaskEdit;
+  TAddForm = class(TForm)
+    LabeledEdit1: TLabeledEdit;
+    LabeledEdit2: TLabeledEdit;
+    LabeledEdit3: TLabeledEdit;
+    LabeledEdit4: TLabeledEdit;
     BitBtn1: TBitBtn;
-    Bevel1: TBevel;
-    ListBox1: TListBox;
-    LViewTeam: TListView;
-    Label1: TLabel;
-    BitBtn3: TBitBtn;
-    BitBtn2: TBitBtn;
-    PanelAnalysis: TPanel;
-    PanelAdd: TPanel;
-    ListView2: TListView;
-    PanelPlayers: TPanel;
-    Label2: TLabel;
-    procedure LViewTeamColumnClick(Sender: TObject; Column: TListColumn);
-    Procedure InsertInList(Info: TTeamNode);
-    Procedure RemoveTeam(Code: Integer);
-    procedure LViewTeamSelectItem(Sender: TObject; Item: TListItem;
-      Selected: Boolean);
-    procedure LViewTeamDblClick(Sender: TObject);
-    procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure LViewTeamKeyDown(Sender: TObject; var Key: Word;
+    CheckListBox1: TCheckListBox;
+    procedure StrKeyPress(Sender: TObject; var Key: Char);
+    procedure LabeledEditChange(Sender: TObject);
+    procedure NumberPress(Sender: TObject; var Key: Char);
+    procedure CheckListBox1MouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure CheckListBox1KeyUp(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure LabeledEditKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
   private
-      FTeamList: TTeamList;
-      FListViewOldWndProc, FPlayerOldWndProc: TWndMethod;
-      procedure ListViewNewWndProc1(var Msg: TMessage);
-      procedure ListViewNewWndProc2(var Msg: TMessage);
+      FState: Boolean;
   public
 
   end;
 
 var
-  MainForm: TMainForm;
+  AddForm: TAddForm;
 
 implementation
 
 {$R *.dfm}
 
-procedure TMainForm.ListViewNewWndProc1(var Msg: TMessage);
-var
-    hdn: ^THDNotify;
-begin
-    if Msg.Msg = WM_NOTIFY then
-    begin
-        hdn := Pointer(Msg.lParam);
-        if (hdn.hdr.code = HDN_BeginTrackW) or (hdn.hdr.code = HDN_BeginTrackA) then
-            Msg.Result := 1
-        else
-            FListViewOldWndProc(Msg);
-    end 
-    else
-        FListViewOldWndProc(Msg);
-end;
-
-procedure TMainForm.ListViewNewWndProc2(var Msg: TMessage);
-var
-    hdn: ^THDNotify;
-begin
-    if Msg.Msg = WM_NOTIFY then
-    begin
-        hdn := Pointer(Msg.lParam);
-        if (hdn.hdr.code = HDN_BeginTrackW) or (hdn.hdr.code = HDN_BeginTrackA) then
-            Msg.Result := 1
-        else
-            FPlayerOldWndProc(Msg);
-    end
-    else
-        FPlayerOldWndProc(Msg);
-end;
-
-procedure TListView.WndProc(var Message: TMessage);
-begin
-    If Message.Msg = WM_NCCALCSIZE then
-        ShowScrollBar(Handle, SB_HORZ, False);
-    Inherited WndProc(Message);
-end;
-
-procedure TMainForm.FormCreate(Sender: TObject);
-begin
-    FListViewOldWndProc := LViewTeam.WindowProc;
-    LViewTeam.WindowProc := ListViewNewWndProc1;
-    FPlayerOldWndProc := ListView2.WindowProc;
-    ListView2.WindowProc := ListViewNewWndProc2;
-    LViewTeam.Columns[2].Width := LVSCW_AUTOSIZE_USEHEADER;
-end;
-    
-
-procedure TMainForm.FormShow(Sender: TObject);
-begin
-    LViewTeam.Width := LViewTeam.Width + 1;
-    LViewTeam.Width := LViewTeam.Width - 1;
-end;
-
-Procedure TMainForm.RemoveTeam(Code: Integer);
+procedure TAddForm.NumberPress(Sender: TObject; var Key: Char);
 Var
-    CurrentNode, PreviousNode: PTeam;
+    CursorPosition, NewCursorPosition: Integer;
+    TempAll, TempSelected, TempBeforeCursor, TempAfterCursor: String;
 begin
-    CurrentNode := FTeamList.Head;
-    PreviousNode := nil;
-
-    While (CurrentNode <> nil) and (CurrentNode.Data.Code <> Code) do
-    begin
-        PreviousNode := CurrentNode;
-        CurrentNode := CurrentNode.Next;
-    end;
-
-    If CurrentNode <> nil then
-    begin
-        If CurrentNode = FTeamList.Head then
-            FTeamList.Head := FTeamList.Head^.Next
-        Else
-            PreviousNode.Next := CurrentNode^.Next;
-
-        If CurrentNode = FTeamList.Tail then
-            FTeamList.Tail := PreviousNode;
-
-      Dispose(CurrentNode);
-    end;
+    If Not(Key In ['0'..'9', #08]) Then
+        Key := #0;
+    NewCursorPosition := Length(TEdit(Sender).Text) - Length(TEdit(Sender).SelText);
+    TempSelected := TEdit(Sender).SelText;
+    TempAll := TEdit(Sender).Text;
+    CursorPosition := TEdit(Sender).SelStart;
+    If (TEdit(Sender).SelStart = 0) and (TEdit(Sender).SelLength < TEdit(Sender).GetTextLen) and (Key = '0') Then
+        Key := #0;
+    If (Key <> #0) and (TempSelected <> '') Then
+        Begin
+            Try
+                Delete(TempAll, CursorPosition + 1, Length(TempSelected));
+                Insert(Key, TempAll, CursorPosition + 1);
+                If (StrToInt(TempAll) < 1) or (StrToInt(TempAll) > 9999) Then
+                  Key := #0
+                Else
+                    Begin
+                        TEdit(Sender).Text := TempAll;
+                        TEdit(Sender).SelStart := NewCursorPosition + 1;
+                        Key := #0;
+                    End;
+            Except
+                Key := #0;
+            End;
+        End;
+    TempBeforeCursor := Copy(TEdit(Sender).Text, 1, TEdit(Sender).SelStart);
+    TempAfterCursor := Copy(TEdit(Sender).Text, TEdit(Sender).SelStart + 1, TEdit(Sender).GetTextLen);
+    //SelStart идет с 0
+    If (Key <> #0) and (Key <> #08) and ((StrToInt(TempBeforeCursor + Key + TempAfterCursor) < 1) or (StrToInt(TempBeforeCursor + Key + TempAfterCursor) > 9999)) Then
+        Key := #0;
 end;
 
-procedure TMainForm.InsertInList(Info: TTeamNode);
-Var
-    NewNode: PTeam;
-begin
-    New(NewNode);
-    NewNode^.Data := Info.Data;
-    NewNode^.TeamPlayers := Info.TeamPlayers;
-    NewNode^.Next := nil;
-    If FTeamList.Head = nil Then
-    Begin
-        FTeamList.Head := NewNode;
-        FTeamList.Tail := NewNode;
-    End
-    Else
-    Begin
-        FTeamList.Tail^.Next := NewNode;
-        FTeamList.Tail := FTeamList.Tail^.Next;
-    End;
-end;
-
-procedure TMainForm.LViewTeamColumnClick(Sender: TObject; Column: TListColumn);
-begin
-    Var X := Column.Index;
-    (Sender as TCustomListView).AlphaSort;
-end;
-
-procedure TMainForm.LViewTeamDblClick(Sender: TObject);
-var
-    Item: TListItem;
-begin
-    Item := LViewTeam.Selected;
-    If Assigned(Item) and Item.Selected then
-    begin
-        ShowMessage('Meow');
-      // ячейка была выбрана
-      // выполнить необходимые действия
-    end;
-end;
-
-procedure TMainForm.LViewTeamKeyDown(Sender: TObject; var Key: Word;
+procedure TAddForm.CheckListBox1KeyUp(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-    //Var X := LViewTeam.Selected.Caption; //код команды
-    If (Key = VK_DELETE) and (LViewTeam.ItemIndex <> -1) and
-    (MessageBox(MainForm.Handle, 'Вы хотите удалить данную команду?', 'Удаление', MB_YESNO + MB_ICONQUESTION) = ID_YES)Then
-        LViewTeam.Delete(LViewTeam.Selected);
+    CheckListBox1.Checked[CheckListBox1.ItemIndex] := FState;
 end;
 
-procedure TMainForm.LViewTeamSelectItem(Sender: TObject; Item: TListItem;
-  Selected: Boolean);
-Var
-    Y: TListItem;
+procedure TAddForm.CheckListBox1MouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
 begin
-    //Тут я по выбору строки справа буду показывать StringGrid игроков данной команды
+    FState := CheckListBox1.Checked[CheckListBox1.ItemIndex];
+end;
 
-    {Var X := Item.Caption;
-    X := Item.SubItems.Strings[0];
-    X := Item.SubItems.Strings[1];
-    X := Item.SubItems.Strings[2];}
-    //Var X := StrToInt(Item.Caption); //Код команды
-    Label1.Caption := IntToStr(LViewTeam.ItemIndex);
-    //Var X := Item;
-    Var Meow := LViewTeam.ItemIndex;
-    Y := LViewTeam.Selected;
-    // ListView1.Selected := nil;
+procedure TAddForm.LabeledEditKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (Shift = [ssCtrl]) and (Key = Ord('A')) then
+        TLabeledEdit(Sender).SelectAll;
+end;
 
-    
-    If Assigned(Y) then
-    //If Selected Then
-        BitBtn1.Enabled := True
-    Else
-        BitBtn1.Enabled := False;
+procedure TAddForm.LabeledEditChange(Sender: TObject);
+Var
+    I: Integer;
+begin
+    BitBtn1.Enabled := (LabeledEdit1.GetTextLen > 0) and (LabeledEdit2.GetTextLen > 0) and
+    (LabeledEdit3.GetTextLen > 0) and (LabeledEdit4.GetTextLen > 0);
+    If (TLabeledEdit(Sender).GetTextLen > 0) and (TLabeledEdit(Sender).Text[1] = '0') then
+    begin
+        I := 1;
+        While TLabeledEdit(Sender).Text[I] = '0' do
+            Inc(I);
+        TLabeledEdit(Sender).Text := Copy(TLabeledEdit(Sender).Text, I, TLabeledEdit(Sender).GetTextLen - I + 1);
+    end;
+end;
+
+procedure TAddForm.StrKeyPress(Sender: TObject; var Key: Char);
+begin
+    If (TEdit(Sender).SelLength > 0) and Not((Key < #192) and (Key <> #08)) Then
+        TEdit(Sender).SelText := #0;
+    If (Key < #192) and (Key <> #08) Then
+        Key := #0;
+    If (Key = '№') Then
+        Key := #0;
+    If (Length(TEdit(Sender).Text) = 30) and (Key <> #08) Then
+        Key := #0;
 end;
 
 end.
