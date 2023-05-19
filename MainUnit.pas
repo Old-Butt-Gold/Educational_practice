@@ -36,7 +36,6 @@ type
     TeamPlayers: TArrPlayer;
   End;
 
-
   PTeam = ^TTeamNode;
   TTeamNode = Record
     Info: TAllInfo;
@@ -83,6 +82,7 @@ type
     Procedure AddToPlayerListView(Index: Integer; CurrentNode: PTeam);
     Procedure ShowPlayers(Temp: PTeam);
     procedure PlayerListViewDblClick(Sender: TObject);
+    Procedure SetNewPlayer(Item: TListItem; Temp: PTeam);
   private
       //FCurrentCode: Integer;
       FTeamList: TTeamList;
@@ -178,6 +178,8 @@ procedure TMainForm.BitBtn1Click(Sender: TObject);
 begin
     //CurrentNode := FindTeamByCode(FCurrentCode);
     //AddPlayerForm.FCurrentNode := CurrentNode;
+    AddPlayerForm.AddBtn.Visible := True;
+    AddPlayerForm.ChangeBtn.Visible := False;
     AddPlayerForm.FCurrentIndex := PlayerListView.GetCount;
     AddPlayerForm.ShowModal;
     If AddPlayerForm.ModalResult = MrYes Then
@@ -351,15 +353,31 @@ begin
     End;
 end;
 
+Procedure TMainForm.SetNewPlayer(Item: TListItem; Temp: PTeam);
+Begin
+    Item.Caption := Temp^.Info.TeamPlayers[Item.Index].Code;
+    Item.SubItems.Strings[0] := Temp^.Info.TeamPlayers[Item.Index].FullName;
+    Item.SubItems.Strings[1] := Temp^.Info.TeamPlayers[Item.Index].Position;
+    Item.SubItems.Strings[2] := IntToStr(Temp^.Info.TeamPlayers[Item.Index].PenaltyPoints);
+    Item.SubItems.Strings[3] := IntToStr(Temp^.Info.TeamPlayers[Item.Index].GoalsScored);
+End;
+
 procedure TMainForm.PlayerListViewDblClick(Sender: TObject);
 var
     Item: TListItem;
     CurrentNode: PTeam;
+    Temp: Integer;
 begin
-    Item := LViewTeam.Selected;
+    Item := PlayerListView.Selected;
     If Assigned(Item) and Item.Selected then
     begin
+        AddPlayerForm.AddBtn.Visible := False;
+        AddPlayerForm.ChangeBtn.Visible := True;
         AddPlayerForm.FCurrentIndex := Item.Index;
+        AddPlayerForm.SetPlayerEdits;
+        AddPlayerForm.ShowModal;
+        If AddPlayerForm.ModalResult = MrYes Then
+            SetNewPlayer(Item, AddPlayerForm.FCurrentNode);
     end;
 end;
 

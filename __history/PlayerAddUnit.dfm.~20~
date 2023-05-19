@@ -13,6 +13,7 @@ object AddPlayerForm: TAddPlayerForm
   Font.Name = 'Times New Roman'
   Font.Style = []
   OldCreateOrder = False
+  OnClose = FormClose
   PixelsPerInch = 96
   TextHeight = 21
   object SBRefresh: TSpeedButton
@@ -47,6 +48,7 @@ object AddPlayerForm: TAddPlayerForm
     LabelPosition = lpLeft
     TabOrder = 0
     TextHint = #1060#1048#1054
+    OnChange = PlayerNameEditChange
     OnKeyDown = PlayerNameEditKeyDown
     OnKeyPress = PlayerStrKeyPress
   end
@@ -63,6 +65,7 @@ object AddPlayerForm: TAddPlayerForm
     MaxLength = 5
     TabOrder = 1
     TextHint = #1050#1086#1076
+    OnChange = PlayerNameEditChange
     OnKeyDown = PlayerNameEditKeyDown
     OnKeyPress = PlayerCodeEditKeyPress
   end
@@ -78,6 +81,7 @@ object AddPlayerForm: TAddPlayerForm
     LabelPosition = lpLeft
     TabOrder = 2
     TextHint = #1064#1090#1088#1072#1092
+    OnChange = PlayerNameEditChange
     OnKeyDown = PlayerNameEditKeyDown
     OnKeyPress = PlayerPenaltyEditKeyPress
   end
@@ -93,6 +97,7 @@ object AddPlayerForm: TAddPlayerForm
     LabelPosition = lpLeft
     TabOrder = 3
     TextHint = #1062#1077#1085#1085#1086#1089#1090#1100
+    OnChange = PlayerNameEditChange
     OnKeyDown = PlayerNameEditKeyDown
     OnKeyPress = PlayerPenaltyEditKeyPress
   end
@@ -102,24 +107,41 @@ object AddPlayerForm: TAddPlayerForm
     Width = 145
     Height = 29
     Cursor = crHandPoint
+    AutoDropDown = True
     AutoCloseUp = True
     Style = csDropDownList
     TabOrder = 4
     TextHint = #1055#1086#1079#1080#1094#1080#1103
+    OnChange = PlayerNameEditChange
+    OnKeyPress = ComboBoxPositionKeyPress
     Items.Strings = (
       #1042#1088#1072#1090#1072#1088#1100
       #1047#1072#1097#1080#1090#1085#1080#1082
       #1055#1086#1083#1091#1079#1072#1097#1080#1090#1085#1080#1082
       #1060#1086#1088#1074#1072#1088#1076)
   end
-  object BitBtn1: TBitBtn
+  object AddBtn: TBitBtn
     Left = 88
     Top = 216
     Width = 193
     Height = 49
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
+    Enabled = False
     Kind = bkYes
     NumGlyphs = 2
     TabOrder = 5
+    OnClick = AddBtnClick
+  end
+  object ChangeBtn: TBitBtn
+    Left = 88
+    Top = 216
+    Width = 193
+    Height = 49
+    Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
+    Kind = bkYes
+    NumGlyphs = 2
+    TabOrder = 6
+    Visible = False
+    OnClick = AddBtnClick
   end
 end

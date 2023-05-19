@@ -107,11 +107,13 @@ object AddPlayerForm: TAddPlayerForm
     Width = 145
     Height = 29
     Cursor = crHandPoint
+    AutoDropDown = True
     AutoCloseUp = True
     Style = csDropDownList
     TabOrder = 4
     TextHint = #1055#1086#1079#1080#1094#1080#1103
     OnChange = PlayerNameEditChange
+    OnKeyPress = ComboBoxPositionKeyPress
     Items.Strings = (
       #1042#1088#1072#1090#1072#1088#1100
       #1047#1072#1097#1080#1090#1085#1080#1082
@@ -129,5 +131,17 @@ object AddPlayerForm: TAddPlayerForm
     NumGlyphs = 2
     TabOrder = 5
     OnClick = AddBtnClick
+  end
+  object ChangeBtn: TBitBtn
+    Left = 88
+    Top = 216
+    Width = 193
+    Height = 49
+    Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
+    Kind = bkYes
+    NumGlyphs = 2
+    TabOrder = 6
+    Visible = False
+    OnClick = ChangeBtnClick
   end
 end

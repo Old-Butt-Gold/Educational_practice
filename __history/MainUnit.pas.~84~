@@ -81,8 +81,10 @@ type
     Procedure ChangeRowInListView(Item: TListItem; CurrentNode: PTeam);
     procedure BitBtn1Click(Sender: TObject);
     Procedure AddToPlayerListView(Index: Integer; CurrentNode: PTeam);
+    Procedure ShowPlayers(Temp: PTeam);
+    procedure PlayerListViewDblClick(Sender: TObject);
   private
-      FCurrentCode: Integer;
+      //FCurrentCode: Integer;
       FTeamList: TTeamList;
       FListViewOldWndProc, FPlayerOldWndProc: TWndMethod;
       procedure ListViewNewWndProc1(var Msg: TMessage);
@@ -173,15 +175,15 @@ Begin
 End;
 
 procedure TMainForm.BitBtn1Click(Sender: TObject);
-Var
-    CurrentNode: PTeam;
 begin
-    CurrentNode := FindTeamByCode(FCurrentCode);
-    AddPlayerForm.FCurrentNode := CurrentNode;
+    //CurrentNode := FindTeamByCode(FCurrentCode);
+    //AddPlayerForm.FCurrentNode := CurrentNode;
+    AddPlayerForm.AddBtn.Visible := True;
+    AddPlayerForm.ChangeBtn.Visible := False;
     AddPlayerForm.FCurrentIndex := PlayerListView.GetCount;
     AddPlayerForm.ShowModal;
     If AddPlayerForm.ModalResult = MrYes Then
-        AddToPlayerListView(PlayerListView.GetCount, CurrentNode);
+        AddToPlayerListView(PlayerListView.GetCount, AddPlayerForm.FCurrentNode);
 end;
 
 procedure TMainForm.BitBtn2Click(Sender: TObject);
@@ -310,10 +312,17 @@ begin
     End;
 end;
 
+Procedure TMainForm.ShowPlayers(Temp: PTeam);
+Var
+    I: Integer;
+Begin
+    For I := Low(Temp^.Info.TeamPlayers) to High(Temp^.Info.TeamPlayers) do
+        If Temp.Info.TeamPlayers[I].Code <> '' Then
+            AddToPlayerListView(PlayerListView.GetCount, Temp);
+End;
+
 procedure TMainForm.LViewTeamSelectItem(Sender: TObject; Item: TListItem;
   Selected: Boolean);
-Var
-    Y: TListItem;
 begin
     //Var X := LViewTeam.GetCount;
     //“ут € по выбору строки справа буду показывать StringGrid игроков данной команды
@@ -323,22 +332,42 @@ begin
     X := Item.SubItems.Strings[1];
     X := Item.SubItems.Strings[2];}
     //Var X := StrToInt(Item.Caption); // од команды
-    If LViewTeam.ItemIndex = -1 Then
-        PlayerListView.Clear;
     //Label1.Caption := IntToStr(LViewTeam.ItemIndex);
     //Var X := Item;
     Var Meow := LViewTeam.ItemIndex;
-    Y := LViewTeam.Selected;
     // ListView1.Selected := nil;
 
     
     If Selected Then
     Begin
-        FCurrentCode := StrToInt(Item.Caption);
+        //FCurrentCode := StrToInt(Item.Caption);
+        AddPlayerForm.FCurrentNode := FindTeamByCode(StrToInt(Item.Caption));
+        PlayerListView.Clear;
+        ShowPlayers(AddPlayerForm.FCurrentNode);
         BitBtn1.Enabled := True;
     End
     Else
+    Begin
+        PlayerListView.Clear;
         BitBtn1.Enabled := False;
+    End;
+end;
+
+procedure TMainForm.PlayerListViewDblClick(Sender: TObject);
+var
+    Item: TListItem;
+    CurrentNode: PTeam;
+    Temp: Integer;
+begin
+    Item := LViewTeam.Selected;
+    If Assigned(Item) and Item.Selected then
+    begin
+        AddPlayerForm.AddBtn.Visible := False;
+        AddPlayerForm.ChangeBtn.Visible := True;
+        AddPlayerForm.FCurrentIndex := Item.Index;
+        AddPlayerForm.SetPlayerEdits;
+        AddPlayerForm.ShowModal;
+    end;
 end;
 
 end.

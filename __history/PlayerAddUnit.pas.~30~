@@ -17,6 +17,7 @@ type
     ComboBoxPosition: TComboBox;
     Label1: TLabel;
     AddBtn: TBitBtn;
+    ChangeBtn: TBitBtn;
     Function NormalizeString(const AStr: String): String;
     procedure PlayerStrKeyPress(Sender: TObject; var Key: Char);
     procedure PlayerCodeEditKeyPress(Sender: TObject; var Key: Char);
@@ -28,6 +29,8 @@ type
     procedure AddBtnClick(Sender: TObject);
     Procedure SetPlayerFields(Temp: PPlayer);
     procedure PlayerNameEditChange(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    Procedure SetPlayerEdits;
   private
     { Private declarations }
   public
@@ -40,6 +43,20 @@ var
   AddPlayerForm: TAddPlayerForm;
 
 implementation
+
+Procedure TAddPlayerForm.SetPlayerEdits;
+Var
+    Temp: String[6];
+Begin
+
+    PlayerNameEdit.Text := FCurrentNode^.Info.TeamPlayers[FCurrentIndex].FullName;
+    Temp := FCurrentNode^.Info.TeamPlayers[FCurrentIndex].Code;
+    Delete(Temp, 1, 1);
+    PlayerCodeEdit.Text := Temp;
+    PlayerPenaltyEdit.Text := IntToStr(FCurrentNode^.Info.TeamPlayers[FCurrentIndex].PenaltyPoints);
+    PlayerScoreEdit.Text := IntToStr(FCurrentNode^.Info.TeamPlayers[FCurrentIndex].GoalsScored);
+    ComboBoxPosition.Text := FCurrentNode^.Info.TeamPlayers[FCurrentIndex].Position;
+End;
 
 Function TAddPlayerForm.NormalizeString(const AStr: String): String;
 Var
@@ -65,6 +82,8 @@ Var
     I: Integer;
 begin
     AddBtn.Enabled := (PlayerNameEdit.GetTextLen > 0) and (PlayerCodeEdit.GetTextLen > 0) and
+    (PlayerPenaltyEdit.GetTextLen > 0) and (PlayerScoreEdit.GetTextLen > 0) and (ComboBoxPosition.GetTextLen > 0);
+    ChangeBtn.Enabled := (PlayerNameEdit.GetTextLen > 0) and (PlayerCodeEdit.GetTextLen > 0) and
     (PlayerPenaltyEdit.GetTextLen > 0) and (PlayerScoreEdit.GetTextLen > 0) and (ComboBoxPosition.GetTextLen > 0);
     If (TLabeledEdit(Sender).GetTextLen > 0) and (TLabeledEdit(Sender).Text[1] = '0') then
     begin
@@ -148,7 +167,6 @@ begin
     New(Temp);
     SetPlayerFields(Temp);
     FCurrentNode^.Info.TeamPlayers[FCurrentIndex] := Temp^;
-    ClearEdits;
     Self.Close;
     ModalResult := AddBtn.ModalResult;
     Dispose(Temp);
@@ -160,8 +178,13 @@ Begin
     PlayerCodeEdit.Clear;
     PlayerPenaltyEdit.Clear;
     PlayerScoreEdit.Clear;
-    ComboBoxPosition.Text := '';
+    ComboBoxPosition.Clear;
 End;
+
+procedure TAddPlayerForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    ClearEdits;
+end;
 
 procedure TAddPlayerForm.SBRefreshClick(Sender: TObject);
 begin
