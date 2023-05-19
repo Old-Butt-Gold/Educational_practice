@@ -85,7 +85,7 @@ object MainForm: TMainForm
     OnSelectItem = LViewTeamSelectItem
   end
   object PanelAnalysis: TPanel
-    Left = 376
+    Left = 370
     Top = 440
     Width = 232
     Height = 81
@@ -134,11 +134,11 @@ object MainForm: TMainForm
     object BitBtn2: TBitBtn
       AlignWithMargins = True
       Left = 0
-      Top = 0
+      Top = 3
       Width = 200
-      Height = 81
+      Height = 77
       Anchors = [akLeft]
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1086#1074
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1084#1072#1085#1076#1091
       Constraints.MaxWidth = 200
       Constraints.MinWidth = 200
       Font.Charset = RUSSIAN_CHARSET
@@ -147,7 +147,7 @@ object MainForm: TMainForm
       Font.Name = 'Times New Roman'
       Font.Style = []
       ImageIndex = 1
-      Kind = bkOK
+      Kind = bkAll
       NumGlyphs = 2
       ParentFont = False
       TabOrder = 0
@@ -182,7 +182,7 @@ object MainForm: TMainForm
       ParentFont = False
       ExplicitWidth = 198
     end
-    object ListView2: TListView
+    object PlayerListView: TListView
       AlignWithMargins = True
       Left = 3
       Top = 24
@@ -221,13 +221,24 @@ object MainForm: TMainForm
       RowSelect = True
       TabOrder = 0
       ViewStyle = vsReport
+      OnDblClick = PlayerListViewDblClick
     end
+  end
+  object BitBtn1: TBitBtn
+    Left = 643
+    Top = 352
+    Width = 174
+    Height = 63
+    Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
+    Enabled = False
+    TabOrder = 5
+    OnClick = BitBtn1Click
   end
   object ImageList1: TImageList
     Height = 128
     Width = 128
-    Left = 744
-    Top = 392
+    Left = 664
+    Top = 544
     Bitmap = {
       494C010101000800040080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000

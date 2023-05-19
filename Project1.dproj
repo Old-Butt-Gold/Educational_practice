@@ -105,8 +105,12 @@
             <Form>MainForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Unit1.pas">
+        <DCCReference Include="TeamAddUnit.pas">
             <Form>AddForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="PlayerAddUnit.pas">
+            <Form>AddPlayerForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <BuildConfiguration Include="Release">

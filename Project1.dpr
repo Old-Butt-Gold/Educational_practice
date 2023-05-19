@@ -5,7 +5,8 @@ uses
   MainUnit in 'MainUnit.pas' {MainForm},
   Vcl.Themes,
   Vcl.Styles,
-  Unit1 in 'Unit1.pas' {AddForm};
+  TeamAddUnit in 'TeamAddUnit.pas' {AddForm},
+  PlayerAddUnit in 'PlayerAddUnit.pas' {AddPlayerForm};
 
 {$R *.res}
 
@@ -15,5 +16,6 @@ begin
   TStyleManager.TrySetStyle('Tablet Dark');
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TAddForm, AddForm);
+  Application.CreateForm(TAddPlayerForm, AddPlayerForm);
   Application.Run;
 end.
