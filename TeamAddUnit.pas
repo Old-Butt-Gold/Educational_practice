@@ -30,11 +30,12 @@ type
     Procedure SetTeamFields(Temp: PTeam);
     Procedure SetTeamEdits(Temp: PTeam);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    Function IsSimilarTeam(Head, Temp: PTeam): Boolean;
+    Function WasNotChanged(Temp: PTeam): Boolean;
   private
-      FStartArr: TArrPlayer;
       FCurrentPointer: PTeam;
   public
-
+      FStartArr: TArrPlayer;
   end;
 
 var
@@ -88,11 +89,39 @@ begin
         TLabeledEdit(Sender).SelectAll;
 end;
 
+Function TAddForm.WasNotChanged(Temp: PTeam): Boolean;
+Begin
+    WasNotChanged := (FCurrentPointer.Info.Data.Code = Temp.Info.Data.Code) and
+    (FCurrentPointer.Info.Data.Rank = Temp.Info.Data.Rank) and
+    (FCurrentPointer.Info.Data.Country = Temp.Info.Data.Country) and
+    (FCurrentPointer.Info.Data.Name = Temp.Info.Data.Name);
+End;
+
 procedure TAddForm.ChangeBtnClick(Sender: TObject);
+Var
+    Temp: PTeam;
 begin
-    SetTeamFields(FCurrentPointer);
-    Self.Close;
-    ModalResult := ChangeBtn.ModalResult;
+    New(Temp);
+    SetTeamFields(Temp);
+    Temp^.Info.TeamPlayers := FStartArr;
+    Temp^.Next := Nil;
+
+    If WasNotChanged(Temp) Then
+    Begin
+        SetTeamFields(FCurrentPointer);
+        Self.Close;
+        ModalResult := mrYes;
+        Dispose(Temp);
+    End
+    Else If IsSimilarTeam(FCurrentPointer, Temp) Then
+        Application.MessageBox('Некоторые из поле данной команды уже заняты другой командой в списке!', 'Ошибка', MB_ICONERROR)
+    Else
+    Begin
+        SetTeamFields(FCurrentPointer);
+        Self.Close;
+        ModalResult := mrYes;
+        Dispose(Temp);
+    End;
 end;
 
 Procedure TAddForm.SetTeamEdits(Temp: PTeam);
@@ -141,6 +170,23 @@ Begin
     NormalizeString := FirstLetter + RestOfString;
 End;
 
+Function TAddForm.IsSimilarTeam(Head, Temp: PTeam): Boolean;
+Var
+    IsCorrect: Boolean;
+    Current: PTeam;
+Begin
+    Current := Head;
+    IsCorrect := False;
+    While Not(IsCorrect) and (Current <> Nil) do
+    Begin
+        IsCorrect := (Current^.Info.Data.Code = Temp^.Info.Data.Code) or
+        (Current^.Info.Data.Rank = Temp^.Info.Data.Rank) or
+        (Current^.Info.Data.Name = Temp^.Info.Data.Name);
+        Current := Current^.Next;
+    End;
+    IsSimilarTeam := IsCorrect;
+End;
+
 procedure TAddForm.AddBtnClick(Sender: TObject);
 Var
     Temp: PTeam;
@@ -149,10 +195,15 @@ begin
     SetTeamFields(Temp);
     Temp^.Info.TeamPlayers := FStartArr;
     Temp^.Next := Nil;
-    MainForm.InsertInList(Temp^);
+    If IsSimilarTeam(MainForm.TeamList.Head, Temp) Then
+        Application.MessageBox('Некоторые из поле данной команды уже заняты другой командой в списке!', 'Ошибка', MB_ICONERROR)
+    Else
+    Begin
+        MainForm.InsertInList(Temp^);
+        Self.Close;
+        ModalResult := mrYes;
+    End;
     Dispose(Temp);
-    Self.Close;
-    ModalResult := AddBtn.ModalResult;
 end;
 
 procedure TAddForm.LabeledEditChange(Sender: TObject);

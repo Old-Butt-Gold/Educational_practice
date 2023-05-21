@@ -13,19 +13,16 @@ uses
 type
 
   TTeam = record
-    Code, Rank: Integer; //Код команды
-    Name: String[25];  //Имя команды
-    Country: string[25]; //Страна команды
-    //Номер команды в турнирной таблице
+    Code, Rank: Integer;
+    Name: String[25];
+    Country: string[25];
   end;
 
   TPlayer = record
-    FullName: String[50]; //Полное имя футболиста
-    PenaltyPoints, GoalsScored: Integer; //Код игрока (эквивалентно выше)
+    FullName: String[50];
+    PenaltyPoints, GoalsScored: Integer;
     Code: String[6];
-    Position: String[12];  //Амплуа игрока
-     //Штрафные очки
-    //Количество забитых голов или переданных пасов
+    Position: String[12];
   end;
 
   PPlayer = ^TPlayer;
@@ -51,7 +48,7 @@ type
   protected
       procedure WndProc(var Message: TMessage); override;
   end;
-  
+
   TMainForm = class(TForm)
     ListBox1: TListBox;
     LViewTeam: TListView;
@@ -83,6 +80,8 @@ type
     Procedure ShowPlayers(Temp: PTeam);
     procedure PlayerListViewDblClick(Sender: TObject);
     Procedure SetNewPlayer(Item: TListItem; Temp: PTeam);
+    procedure PlayerListViewKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
   private
       //FCurrentCode: Integer;
       FTeamList: TTeamList;
@@ -90,6 +89,7 @@ type
       procedure ListViewNewWndProc1(var Msg: TMessage);
       procedure ListViewNewWndProc2(var Msg: TMessage);
   public
+      Property TeamList: TTeamList Read FTeamList;
 
   end;
 
@@ -178,12 +178,17 @@ procedure TMainForm.BitBtn1Click(Sender: TObject);
 begin
     //CurrentNode := FindTeamByCode(FCurrentCode);
     //AddPlayerForm.FCurrentNode := CurrentNode;
-    AddPlayerForm.AddBtn.Visible := True;
-    AddPlayerForm.ChangeBtn.Visible := False;
-    AddPlayerForm.FCurrentIndex := PlayerListView.GetCount;
-    AddPlayerForm.ShowModal;
-    If AddPlayerForm.ModalResult = MrYes Then
-        AddToPlayerListView(PlayerListView.GetCount, AddPlayerForm.FCurrentNode);
+    If PlayerListView.GetCount < 11 Then
+    Begin
+        AddPlayerForm.AddBtn.Visible := True;
+        AddPlayerForm.ChangeBtn.Visible := False;
+        AddPlayerForm.FCurrentIndex := PlayerListView.GetCount;
+        AddPlayerForm.ShowModal;
+        If AddPlayerForm.ModalResult = MrYes Then
+            AddToPlayerListView(PlayerListView.GetCount, AddPlayerForm.FCurrentNode);
+    End
+    Else
+        MessageBox(Handle, 'У вас достигнуто максимальное число игроков', 'Внимание', MB_ICONINFORMATION);
 end;
 
 procedure TMainForm.BitBtn2Click(Sender: TObject);
@@ -324,20 +329,6 @@ End;
 procedure TMainForm.LViewTeamSelectItem(Sender: TObject; Item: TListItem;
   Selected: Boolean);
 begin
-    //Var X := LViewTeam.GetCount;
-    //Тут я по выбору строки справа буду показывать StringGrid игроков данной команды
-
-    {Var X := Item.Caption;
-    X := Item.SubItems.Strings[0];
-    X := Item.SubItems.Strings[1];
-    X := Item.SubItems.Strings[2];}
-    //Var X := StrToInt(Item.Caption); //Код команды
-    //Label1.Caption := IntToStr(LViewTeam.ItemIndex);
-    //Var X := Item;
-    Var Meow := LViewTeam.ItemIndex;
-    // ListView1.Selected := nil;
-
-    
     If Selected Then
     Begin
         //FCurrentCode := StrToInt(Item.Caption);
@@ -379,6 +370,27 @@ begin
         If AddPlayerForm.ModalResult = MrYes Then
             SetNewPlayer(Item, AddPlayerForm.FCurrentNode);
     end;
+end;
+
+procedure TMainForm.PlayerListViewKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+Var
+    Item: TListItem;
+    Index, I: Integer;
+    CurrentNode: PTeam;
+begin
+    If (Key = VK_DELETE) and (PlayerListView.ItemIndex <> -1) and
+    (MessageBox(MainForm.Handle, 'Вы хотите удалить данную команду?', 'Удаление', MB_YESNO + MB_ICONQUESTION) = ID_YES) Then
+    Begin
+        Item := PlayerListView.Selected;
+        Index := Item.Index;
+        CurrentNode := AddPlayerForm.FCurrentNode;
+        For I := Index to High(CurrentNode^.Info.TeamPlayers) - 1 do
+            CurrentNode^.Info.TeamPlayers[I] := CurrentNode^.Info.TeamPlayers[I + 1];
+        CurrentNode^.Info.TeamPlayers[10] := AddForm.FStartArr[10];
+        PlayerListView.Clear;
+        ShowPlayers(CurrentNode);
+    End;
 end;
 
 end.

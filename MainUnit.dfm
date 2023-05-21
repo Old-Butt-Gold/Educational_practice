@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'Football Viewer'
   ClientHeight = 601
-  ClientWidth = 1266
+  ClientWidth = 1320
   Color = clBtnFace
   DoubleBuffered = True
   Font.Charset = RUSSIAN_CHARSET
@@ -20,7 +20,7 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    1266
+    1320
     601)
   PixelsPerInch = 96
   TextHeight = 17
@@ -38,7 +38,7 @@ object MainForm: TMainForm
     AlignWithMargins = True
     Left = 8
     Top = 8
-    Width = 594
+    Width = 577
     Height = 407
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelInner = bvNone
@@ -64,6 +64,11 @@ object MainForm: TMainForm
         AutoSize = True
         Caption = #1053#1086#1084#1077#1088' '#1074' '#1088#1077#1081#1090#1080#1085#1075#1077
       end>
+    Font.Charset = RUSSIAN_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -16
+    Font.Name = 'Times New Roman'
+    Font.Style = []
     FlatScrollBars = True
     Groups = <
       item
@@ -76,6 +81,7 @@ object MainForm: TMainForm
     HotTrackStyles = [htHandPoint, htUnderlineHot]
     ReadOnly = True
     RowSelect = True
+    ParentFont = False
     SortType = stBoth
     TabOrder = 1
     ViewStyle = vsReport
@@ -85,19 +91,19 @@ object MainForm: TMainForm
     OnSelectItem = LViewTeamSelectItem
   end
   object PanelAnalysis: TPanel
-    Left = 370
+    Left = 299
     Top = 440
-    Width = 232
+    Width = 286
     Height = 81
     Anchors = [akLeft, akRight, akBottom]
     BevelOuter = bvNone
     TabOrder = 2
     DesignSize = (
-      232
+      286
       81)
     object BitBtn3: TBitBtn
       AlignWithMargins = True
-      Left = 31
+      Left = 85
       Top = 3
       Width = 200
       Height = 77
@@ -156,9 +162,9 @@ object MainForm: TMainForm
   end
   object PanelPlayers: TPanel
     AlignWithMargins = True
-    Left = 640
+    Left = 620
     Top = 5
-    Width = 610
+    Width = 700
     Height = 310
     Anchors = [akTop, akRight]
     BevelOuter = bvNone
@@ -168,7 +174,7 @@ object MainForm: TMainForm
     object Label2: TLabel
       Left = 0
       Top = 0
-      Width = 610
+      Width = 700
       Height = 21
       Align = alTop
       Alignment = taCenter
@@ -186,7 +192,7 @@ object MainForm: TMainForm
       AlignWithMargins = True
       Left = 3
       Top = 24
-      Width = 604
+      Width = 694
       Height = 283
       Align = alClient
       BevelInner = bvNone
@@ -212,20 +218,28 @@ object MainForm: TMainForm
           Caption = #1064#1090#1088#1072#1092#1085#1099#1077' '#1086#1095#1082#1080
         end
         item
+          Alignment = taCenter
           AutoSize = True
-          Caption = #1054#1073#1097#1072#1103' '#1094#1077#1085#1085#1086#1089#1090#1100
+          Caption = #1054#1073#1097#1080#1077' '#1086#1095#1082#1080
         end>
+      Font.Charset = RUSSIAN_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -16
+      Font.Name = 'Times New Roman'
+      Font.Style = []
       FlatScrollBars = True
       HotTrackStyles = [htHandPoint, htUnderlineHot]
       ReadOnly = True
       RowSelect = True
+      ParentFont = False
       TabOrder = 0
       ViewStyle = vsReport
       OnDblClick = PlayerListViewDblClick
+      OnKeyDown = PlayerListViewKeyDown
     end
   end
   object BitBtn1: TBitBtn
-    Left = 643
+    Left = 623
     Top = 352
     Width = 174
     Height = 63

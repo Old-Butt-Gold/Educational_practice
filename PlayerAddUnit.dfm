@@ -39,7 +39,7 @@ object AddPlayerForm: TAddPlayerForm
   object PlayerNameEdit: TLabeledEdit
     Left = 160
     Top = 21
-    Width = 425
+    Width = 441
     Height = 29
     Alignment = taCenter
     EditLabel.Width = 132
@@ -104,7 +104,7 @@ object AddPlayerForm: TAddPlayerForm
   object ComboBoxPosition: TComboBox
     Left = 440
     Top = 64
-    Width = 145
+    Width = 161
     Height = 29
     Cursor = crHandPoint
     AutoDropDown = True

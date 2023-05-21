@@ -60,9 +60,9 @@ object AddForm: TAddForm
     Width = 121
     Height = 31
     Alignment = taCenter
-    EditLabel.Width = 97
+    EditLabel.Width = 114
     EditLabel.Height = 23
-    EditLabel.Caption = #1050#1086#1076' '#1080#1075#1088#1086#1082#1072
+    EditLabel.Caption = #1050#1086#1076' '#1082#1086#1084#1072#1085#1076#1099
     LabelPosition = lpLeft
     TabOrder = 1
     TextHint = #1050#1086#1076
@@ -108,8 +108,8 @@ object AddForm: TAddForm
     Width = 145
     Height = 49
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+    Default = True
     Enabled = False
-    Kind = bkYes
     NumGlyphs = 2
     TabOrder = 4
     OnClick = AddBtnClick
@@ -120,7 +120,7 @@ object AddForm: TAddForm
     Width = 145
     Height = 49
     Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-    Kind = bkYes
+    Default = True
     NumGlyphs = 2
     TabOrder = 5
     Visible = False
