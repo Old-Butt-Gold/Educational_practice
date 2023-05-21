@@ -46,6 +46,7 @@ object AddPlayerForm: TAddPlayerForm
     EditLabel.Height = 21
     EditLabel.Caption = #1060#1072#1084#1080#1083#1080#1103' '#1080#1075#1088#1086#1082#1072
     LabelPosition = lpLeft
+    PopupMenu = MainForm.PopupMenu
     TabOrder = 0
     TextHint = #1060#1048#1054
     OnChange = PlayerNameEditChange
@@ -63,6 +64,7 @@ object AddPlayerForm: TAddPlayerForm
     EditLabel.Caption = #1050#1086#1076' '#1080#1075#1088#1086#1082#1072
     LabelPosition = lpLeft
     MaxLength = 5
+    PopupMenu = MainForm.PopupMenu
     TabOrder = 1
     TextHint = #1050#1086#1076
     OnChange = PlayerNameEditChange
@@ -79,6 +81,7 @@ object AddPlayerForm: TAddPlayerForm
     EditLabel.Height = 21
     EditLabel.Caption = #1064#1090#1088#1072#1092#1085#1099#1077' '#1086#1095#1082#1080
     LabelPosition = lpLeft
+    PopupMenu = MainForm.PopupMenu
     TabOrder = 2
     TextHint = #1064#1090#1088#1072#1092
     OnChange = PlayerNameEditChange
@@ -95,6 +98,7 @@ object AddPlayerForm: TAddPlayerForm
     EditLabel.Height = 21
     EditLabel.Caption = #1054#1073#1097#1072#1103' '#1094#1077#1085#1085#1086#1089#1090#1100
     LabelPosition = lpLeft
+    PopupMenu = MainForm.PopupMenu
     TabOrder = 3
     TextHint = #1062#1077#1085#1085#1086#1089#1090#1100
     OnChange = PlayerNameEditChange
@@ -110,6 +114,7 @@ object AddPlayerForm: TAddPlayerForm
     AutoDropDown = True
     AutoCloseUp = True
     Style = csDropDownList
+    PopupMenu = MainForm.PopupMenu
     TabOrder = 4
     TextHint = #1055#1086#1079#1080#1094#1080#1103
     OnChange = PlayerNameEditChange

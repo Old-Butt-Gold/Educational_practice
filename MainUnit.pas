@@ -8,7 +8,7 @@ uses
   Vcl.ToolWin, Vcl.ActnMan, Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ActnColorMaps,
   Vcl.Mask, Vcl.ExtCtrls, Vcl.Buttons, Vcl.CheckLst, Vcl.CategoryButtons,
   Vcl.ButtonGroup, Vcl.ComCtrls, Vcl.JumpList, CommCtrl, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, Vcl.ControlList, System.ImageList, Vcl.ImgList;
+  Vcl.DBGrids, Vcl.ControlList, System.ImageList, Vcl.ImgList, Vcl.Menus;
 
 type
 
@@ -50,7 +50,6 @@ type
   end;
 
   TMainForm = class(TForm)
-    ListBox1: TListBox;
     LViewTeam: TListView;
     BitBtn3: TBitBtn;
     BitBtn2: TBitBtn;
@@ -60,7 +59,13 @@ type
     PanelPlayers: TPanel;
     Label2: TLabel;
     ImageList1: TImageList;
-    BitBtn1: TBitBtn;
+    AddPlayerBtn: TBitBtn;
+    MainMenu: TMainMenu;
+    PopupMenu: TPopupMenu;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    playerRatings: TMenuItem;
     procedure LViewTeamColumnClick(Sender: TObject; Column: TListColumn);
     Procedure InsertInList(InsNode: TTeamNode);
     Procedure RemoveTeam(Code: Integer);
@@ -75,13 +80,14 @@ type
     Procedure AddToListView;
     Function FindTeamByCode(Code: Integer): PTeam;
     Procedure ChangeRowInListView(Item: TListItem; CurrentNode: PTeam);
-    procedure BitBtn1Click(Sender: TObject);
+    procedure AddPlayerBtnClick(Sender: TObject);
     Procedure AddToPlayerListView(Index: Integer; CurrentNode: PTeam);
     Procedure ShowPlayers(Temp: PTeam);
     procedure PlayerListViewDblClick(Sender: TObject);
     Procedure SetNewPlayer(Item: TListItem; Temp: PTeam);
     procedure PlayerListViewKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
+    procedure playerRatingsClick(Sender: TObject);
   private
       //FCurrentCode: Integer;
       FTeamList: TTeamList;
@@ -102,7 +108,7 @@ implementation
 
 {$R *.dfm}
 
-uses TeamAddUnit, PlayerAddUnit;
+uses TeamAddUnit, PlayerAddUnit, Ratings;
 
 procedure TMainForm.ListViewNewWndProc1(var Msg: TMessage);
 var
@@ -174,7 +180,7 @@ Begin
     Item.SubItems.Add(IntToStr(CurrentNode^.Info.TeamPlayers[Index].GoalsScored));
 End;
 
-procedure TMainForm.BitBtn1Click(Sender: TObject);
+procedure TMainForm.AddPlayerBtnClick(Sender: TObject);
 begin
     //CurrentNode := FindTeamByCode(FCurrentCode);
     //AddPlayerForm.FCurrentNode := CurrentNode;
@@ -335,12 +341,12 @@ begin
         AddPlayerForm.FCurrentNode := FindTeamByCode(StrToInt(Item.Caption));
         PlayerListView.Clear;
         ShowPlayers(AddPlayerForm.FCurrentNode);
-        BitBtn1.Enabled := True;
+        AddPlayerBtn.Enabled := True;
     End
     Else
     Begin
         PlayerListView.Clear;
-        BitBtn1.Enabled := False;
+        AddPlayerBtn.Enabled := False;
     End;
 end;
 
@@ -391,6 +397,12 @@ begin
         PlayerListView.Clear;
         ShowPlayers(CurrentNode);
     End;
+end;
+
+procedure TMainForm.playerRatingsClick(Sender: TObject);
+begin
+    RatingForm.FindBestAndWorst(FTeamList.Head);
+    RatingForm.ShowModal;
 end;
 
 end.

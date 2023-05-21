@@ -1,0 +1,107 @@
+﻿unit Ratings;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MainUnit, Vcl.ComCtrls, Vcl.Grids, CommCtrl;
+
+type
+  TRating = Record
+      TeamCode, Score, Code: Integer;
+      FullName: String[50];
+  End;
+
+  PAllRating = ^TAllRating;
+  TAllRating = Record
+      Current: TRating;
+      Next: PAllRating;
+  End;
+
+  TLinkedList = Record
+      Head, Tail: PAllRating;
+  End;
+
+
+  TListView = class(Vcl.ComCtrls.TListView)
+  protected
+      procedure WndProc(var Message: TMessage); override;
+  end;
+
+  TRatingForm = class(TForm)
+    ListView1: TListView;
+    procedure FormCreate(Sender: TObject);
+    Procedure FindBestAndWorst(Temp: PTeam);
+  private
+      BestList, WorstList: TLinkedList;
+      OldWndProc: TWndMethod;
+      procedure ListViewNewWndProc(var Msg: TMessage);
+
+  public
+
+  end;
+
+var
+  RatingForm: TRatingForm;
+
+implementation
+
+procedure InsertElement(var list: TLinkedList; const newRating: TRating);
+var
+    NewNode: PAllRating;
+begin
+    New(NewNode); // Создаем новый узел списка
+    NewNode^.Current := newRating;
+    NewNode^.Next := nil;
+
+    if list.Head = nil then
+    begin
+      // Если список пуст, новый узел становится головой и хвостом списка
+      list.Head := NewNode;
+      list.Tail := NewNode;
+    end
+    else
+    begin
+      // Иначе добавляем новый узел в конец списка и обновляем хвост
+      list.Tail^.Next := NewNode;
+      list.Tail := NewNode;
+    end;
+end;
+
+procedure TListView.WndProc(var Message: TMessage);
+begin
+    If Message.Msg = WM_NCCALCSIZE then
+        ShowScrollBar(Handle, SB_HORZ, False);
+    Inherited WndProc(Message);
+end;
+
+procedure TRatingForm.FormCreate(Sender: TObject);
+begin
+    OldWndProc := ListView1.WindowProc;
+    ListView1.WindowProc := ListViewNewWndProc;
+end;
+
+procedure TRatingForm.ListViewNewWndProc(var Msg: TMessage);
+var
+    hdn: ^THDNotify;
+begin
+    if Msg.Msg = WM_NOTIFY then
+    begin
+        hdn := Pointer(Msg.lParam);
+        if (hdn.hdr.code = HDN_BeginTrackW) or (hdn.hdr.code = HDN_BeginTrackA) then
+            Msg.Result := 1
+        else
+            OldWndProc(Msg);
+    end
+    else
+        OldWndProc(Msg);
+end;
+
+Procedure TRatingForm.FindBestAndWorst(Temp: PTeam);
+Begin
+    Var X := 0;
+End;
+
+{$R *.dfm}
+
+end.

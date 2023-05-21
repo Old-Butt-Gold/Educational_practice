@@ -15,6 +15,7 @@ object MainForm: TMainForm
   Padding.Top = 2
   Padding.Right = 2
   Padding.Bottom = 2
+  Menu = MainMenu
   OldCreateOrder = False
   Scaled = False
   OnCreate = FormCreate
@@ -24,16 +25,6 @@ object MainForm: TMainForm
     601)
   PixelsPerInch = 96
   TextHeight = 17
-  object ListBox1: TListBox
-    Left = 719
-    Top = 496
-    Width = 121
-    Height = 97
-    ItemHeight = 17
-    Items.Strings = (
-      'meow')
-    TabOrder = 0
-  end
   object LViewTeam: TListView
     AlignWithMargins = True
     Left = 8
@@ -82,8 +73,7 @@ object MainForm: TMainForm
     ReadOnly = True
     RowSelect = True
     ParentFont = False
-    SortType = stBoth
-    TabOrder = 1
+    TabOrder = 0
     ViewStyle = vsReport
     OnColumnClick = LViewTeamColumnClick
     OnDblClick = LViewTeamDblClick
@@ -97,7 +87,7 @@ object MainForm: TMainForm
     Height = 81
     Anchors = [akLeft, akRight, akBottom]
     BevelOuter = bvNone
-    TabOrder = 2
+    TabOrder = 1
     DesignSize = (
       286
       81)
@@ -133,7 +123,7 @@ object MainForm: TMainForm
     Height = 81
     Anchors = [akLeft, akBottom]
     BevelOuter = bvNone
-    TabOrder = 3
+    TabOrder = 2
     DesignSize = (
       232
       81)
@@ -170,7 +160,7 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     Caption = 'P'
     ShowCaption = False
-    TabOrder = 4
+    TabOrder = 3
     object Label2: TLabel
       Left = 0
       Top = 0
@@ -238,15 +228,15 @@ object MainForm: TMainForm
       OnKeyDown = PlayerListViewKeyDown
     end
   end
-  object BitBtn1: TBitBtn
+  object AddPlayerBtn: TBitBtn
     Left = 623
     Top = 352
     Width = 174
     Height = 63
     Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
     Enabled = False
-    TabOrder = 5
-    OnClick = BitBtn1Click
+    TabOrder = 4
+    OnClick = AddPlayerBtnClick
   end
   object ImageList1: TImageList
     Height = 128
@@ -8708,5 +8698,28 @@ object MainForm: TMainForm
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
+  end
+  object MainMenu: TMainMenu
+    Left = 904
+    Top = 440
+    object N1: TMenuItem
+      Caption = #1060#1072#1081#1083
+      object N2: TMenuItem
+        Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+        ShortCut = 16463
+      end
+      object N3: TMenuItem
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+        ShortCut = 16467
+      end
+    end
+    object playerRatings: TMenuItem
+      Caption = #1054#1094#1077#1085#1082#1072' '#1080#1075#1088#1086#1082#1086#1074
+      OnClick = playerRatingsClick
+    end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 808
+    Top = 512
   end
 end

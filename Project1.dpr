@@ -6,7 +6,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   TeamAddUnit in 'TeamAddUnit.pas' {AddForm},
-  PlayerAddUnit in 'PlayerAddUnit.pas' {AddPlayerForm};
+  PlayerAddUnit in 'PlayerAddUnit.pas' {AddPlayerForm},
+  Ratings in 'Ratings.pas' {RatingForm};
 
 {$R *.res}
 
@@ -17,5 +18,6 @@ begin
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TAddForm, AddForm);
   Application.CreateForm(TAddPlayerForm, AddPlayerForm);
+  Application.CreateForm(TRatingForm, RatingForm);
   Application.Run;
 end.

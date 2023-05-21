@@ -155,7 +155,7 @@ end;
 
 Procedure TAddPlayerForm.SetPlayerFields(Temp: PPlayer);
 Begin
-    Temp^.FullName := PlayerNameEdit.Text;
+    Temp^.FullName := NormalizeString(PlayerNameEdit.Text);
     Temp^.PenaltyPoints := StrToInt(PlayerPenaltyEdit.Text);
     Temp^.GoalsScored := StrToInt(PlayerScoreEdit.Text);
     Temp^.Code := '#' + PlayerCodeEdit.Text;
