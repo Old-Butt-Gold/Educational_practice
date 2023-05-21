@@ -1,0 +1,16 @@
+object TeamForm: TTeamForm
+  Left = 0
+  Top = 0
+  Caption = #1048#1075#1088#1086#1082#1080' '#1082#1086#1084#1072#1085#1076
+  ClientHeight = 299
+  ClientWidth = 635
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+end

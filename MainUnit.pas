@@ -51,7 +51,6 @@ type
 
   TMainForm = class(TForm)
     LViewTeam: TListView;
-    BitBtn3: TBitBtn;
     BitBtn2: TBitBtn;
     PanelAnalysis: TPanel;
     PanelAdd: TPanel;
@@ -63,10 +62,12 @@ type
     MainMenu: TMainMenu;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
-    N2: TMenuItem;
-    N3: TMenuItem;
-    playerRatings: TMenuItem;
-    procedure LViewTeamColumnClick(Sender: TObject; Column: TListColumn);
+    OpenFile: TMenuItem;
+    SaveFile: TMenuItem;
+    PlayerRatings: TMenuItem;
+    AnalysisButton: TMenuItem;
+    OpenDialog: TOpenDialog;
+    SaveDialog: TSaveDialog;
     Procedure InsertInList(InsNode: TTeamNode);
     Procedure RemoveTeam(Code: Integer);
     procedure LViewTeamSelectItem(Sender: TObject; Item: TListItem;
@@ -87,9 +88,12 @@ type
     Procedure SetNewPlayer(Item: TListItem; Temp: PTeam);
     procedure PlayerListViewKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure playerRatingsClick(Sender: TObject);
+    procedure PlayerRatingsClick(Sender: TObject);
+    procedure SaveFileClick(Sender: TObject);
+    procedure OpenFileClick(Sender: TObject);
+    Procedure ClearLinkedList;
+    procedure AnalysisButtonClick(Sender: TObject);
   private
-      //FCurrentCode: Integer;
       FTeamList: TTeamList;
       FListViewOldWndProc, FPlayerOldWndProc: TWndMethod;
       procedure ListViewNewWndProc1(var Msg: TMessage);
@@ -108,7 +112,7 @@ implementation
 
 {$R *.dfm}
 
-uses TeamAddUnit, PlayerAddUnit, Ratings;
+uses TeamAddUnit, PlayerAddUnit, Ratings, PlayerOfTeam;
 
 procedure TMainForm.ListViewNewWndProc1(var Msg: TMessage);
 var
@@ -180,6 +184,12 @@ Begin
     Item.SubItems.Add(IntToStr(CurrentNode^.Info.TeamPlayers[Index].GoalsScored));
 End;
 
+procedure TMainForm.AnalysisButtonClick(Sender: TObject);
+begin
+    TeamForm.CalculatePlayers(FTeamList.Head);
+    TeamForm.ShowModal;
+end;
+
 procedure TMainForm.AddPlayerBtnClick(Sender: TObject);
 begin
     //CurrentNode := FindTeamByCode(FCurrentCode);
@@ -203,7 +213,10 @@ begin
     AddForm.AddBtn.Visible := True;
     AddForm.ShowModal;
     If AddForm.ModalResult = MrYes Then
+    Begin
         AddToListView;
+        SaveFile.Enabled := True;
+    End;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -286,11 +299,6 @@ begin
     End;
 end;
 
-procedure TMainForm.LViewTeamColumnClick(Sender: TObject; Column: TListColumn);
-begin
-    Var X := Column.Index;
-end;
-
 procedure TMainForm.LViewTeamDblClick(Sender: TObject);
 var
     Item: TListItem;
@@ -320,6 +328,7 @@ begin
     Begin
         RemoveTeam(StrToInt(LViewTeam.Selected.Caption));
         LViewTeam.Delete(LViewTeam.Selected);
+        SaveFile.Enabled := Not(LViewTeam.GetCount = 0);
     End;
 end;
 
@@ -347,6 +356,93 @@ begin
     Begin
         PlayerListView.Clear;
         AddPlayerBtn.Enabled := False;
+    End;
+end;
+
+procedure TMainForm.ClearLinkedList;
+Var
+    Current, NextNode: PTeam;
+begin
+    Current := FTeamList.Head;
+    while current <> nil do
+    begin
+        NextNode := Current^.Next;
+        Dispose(Current);
+        Current := nextNode;
+    end;
+    FTeamList.Head := nil;
+    FTeamList.Tail := nil;
+end;
+
+
+
+procedure TMainForm.OpenFileClick(Sender: TObject);
+Var
+    FileInput: File of TAllInfo;
+    Temp: PTeam;
+    Item: TListItem;
+begin
+    If OpenDialog.Execute Then
+    Begin
+        Try
+            Try
+                AssignFile(FileInput, ChangeFileExt(OpenDialog.FileName, '.dat'));
+                Reset(FileInput);
+                ClearLinkedList;
+                PlayerListView.Clear;
+                LViewTeam.Clear;
+                While Not Eof(FileInput) do
+                Begin
+                    New(Temp);
+                    Temp^.Next := Nil;
+                    Read(FileInput, Temp^.Info);
+                    InsertInList(Temp^);
+                End;
+                Temp := FTeamList.Head;
+                While Temp <> Nil do
+                Begin
+                    Item := LViewTeam.Items.Add;
+                    Item.Caption := IntToStr(Temp^.Info.Data.Code);
+                    Item.SubItems.Add(Temp^.Info.Data.Name);
+                    Item.SubItems.Add(Temp^.Info.Data.Country);
+                    Item.SubItems.Add(IntToStr(Temp^.Info.Data.Rank));
+                    Temp := Temp^.Next;
+                End;
+                SaveFile.Enabled := True;
+            Except
+                MessageBox(Handle, 'Файл некорректен!', 'Внимание!', MB_OK + MB_ICONWARNING);
+            End;
+        Finally
+            If FileExists(ChangeFileExt(SaveDialog.FileName, '.dat')) Then
+                CloseFile(FileInput);
+        End;    
+    End;
+    
+end;
+
+procedure TMainForm.SaveFileClick(Sender: TObject);
+Var
+    FileOutput: File of TAllInfo;
+    Temp: PTeam;
+begin
+    If SaveDialog.Execute Then
+    Begin
+        Try
+            Try
+                AssignFile(FileOutput, ChangeFileExt(SaveDialog.FileName, '.dat'));
+                Rewrite(FileOutput);
+                Temp := FTeamList.Head;
+                While Temp <> Nil do
+                Begin
+                    Write(FileOutput, Temp^.Info);
+                    Temp := Temp^.Next;
+                End;
+            Except
+                MessageBox(Handle, 'Файл некорректен!', 'Внимание!', MB_OK + MB_ICONWARNING);
+            End;
+        Finally
+            CloseFile(FileOutput);
+        End;
     End;
 end;
 
@@ -399,7 +495,7 @@ begin
     End;
 end;
 
-procedure TMainForm.playerRatingsClick(Sender: TObject);
+procedure TMainForm.PlayerRatingsClick(Sender: TObject);
 begin
     RatingForm.FindBestAndWorst(FTeamList.Head);
     RatingForm.ShowModal;

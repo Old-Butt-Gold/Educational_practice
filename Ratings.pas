@@ -124,7 +124,7 @@ begin
 end;
 
 // Процедура для разделения списка на две половины
-procedure SplitLinkedList(var source: PAllRating; var frontList, backList: PAllRating);
+procedure SplitLinkedList(var source, frontList, backList: PAllRating);
 var
     fastPtr, slowPtr: PAllRating;
 begin
@@ -165,7 +165,7 @@ begin
     begin
         // Сравниваем значения Score элементов двух списков и
         // рекурсивно объединяем их в отсортированный список.
-        if (listA^.Current.Score >= listB^.Current.Score) then
+        if (listA^.Current.Score >= listB^.Current.Score) then // <= по убыванию, Вместо Score введите свое поле
         begin
             mergedList := listA;
             mergedList^.Next := SortedMerge(listA^.Next, listB);

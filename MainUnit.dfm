@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'Football Viewer'
-  ClientHeight = 601
+  ClientHeight = 482
   ClientWidth = 1320
   Color = clBtnFace
   DoubleBuffered = True
@@ -22,7 +22,7 @@ object MainForm: TMainForm
   OnShow = FormShow
   DesignSize = (
     1320
-    601)
+    482)
   PixelsPerInch = 96
   TextHeight = 17
   object LViewTeam: TListView
@@ -30,7 +30,7 @@ object MainForm: TMainForm
     Left = 8
     Top = 8
     Width = 577
-    Height = 407
+    Height = 470
     Anchors = [akLeft, akTop, akRight, akBottom]
     BevelInner = bvNone
     BevelOuter = bvNone
@@ -75,53 +75,41 @@ object MainForm: TMainForm
     ParentFont = False
     TabOrder = 0
     ViewStyle = vsReport
-    OnColumnClick = LViewTeamColumnClick
     OnDblClick = LViewTeamDblClick
     OnKeyDown = LViewTeamKeyDown
     OnSelectItem = LViewTeamSelectItem
   end
   object PanelAnalysis: TPanel
-    Left = 299
-    Top = 440
-    Width = 286
+    Left = 1096
+    Top = 392
+    Width = 219
     Height = 81
-    Anchors = [akLeft, akRight, akBottom]
+    Anchors = [akTop, akRight]
     BevelOuter = bvNone
     TabOrder = 1
     DesignSize = (
-      286
+      219
       81)
-    object BitBtn3: TBitBtn
-      AlignWithMargins = True
-      Left = 85
+    object AddPlayerBtn: TBitBtn
+      Left = 21
       Top = 3
       Width = 200
       Height = 77
       Anchors = [akRight]
-      BiDiMode = bdLeftToRight
-      Caption = #1040#1085#1072#1083#1080#1079' '#1080#1075#1088#1086#1082#1086#1074
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
       Constraints.MaxWidth = 200
       Constraints.MinWidth = 200
-      Font.Charset = RUSSIAN_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -19
-      Font.Name = 'Times New Roman'
-      Font.Style = []
-      ImageIndex = 0
-      Kind = bkRetry
-      Layout = blGlyphRight
-      NumGlyphs = 2
-      ParentBiDiMode = False
-      ParentFont = False
+      Enabled = False
       TabOrder = 0
+      OnClick = AddPlayerBtnClick
     end
   end
   object PanelAdd: TPanel
-    Left = 8
-    Top = 440
+    Left = 623
+    Top = 392
     Width = 232
     Height = 81
-    Anchors = [akLeft, akBottom]
+    Anchors = [akTop, akRight]
     BevelOuter = bvNone
     TabOrder = 2
     DesignSize = (
@@ -155,7 +143,7 @@ object MainForm: TMainForm
     Left = 620
     Top = 5
     Width = 700
-    Height = 310
+    Height = 350
     Anchors = [akTop, akRight]
     BevelOuter = bvNone
     Caption = 'P'
@@ -183,7 +171,7 @@ object MainForm: TMainForm
       Left = 3
       Top = 24
       Width = 694
-      Height = 283
+      Height = 323
       Align = alClient
       BevelInner = bvNone
       BevelOuter = bvNone
@@ -227,16 +215,6 @@ object MainForm: TMainForm
       OnDblClick = PlayerListViewDblClick
       OnKeyDown = PlayerListViewKeyDown
     end
-  end
-  object AddPlayerBtn: TBitBtn
-    Left = 623
-    Top = 352
-    Width = 174
-    Height = 63
-    Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
-    Enabled = False
-    TabOrder = 4
-    OnClick = AddPlayerBtnClick
   end
   object ImageList1: TImageList
     Height = 128
@@ -8701,25 +8679,42 @@ object MainForm: TMainForm
   end
   object MainMenu: TMainMenu
     Left = 904
-    Top = 440
+    Top = 416
     object N1: TMenuItem
       Caption = #1060#1072#1081#1083
-      object N2: TMenuItem
+      object OpenFile: TMenuItem
         Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
         ShortCut = 16463
+        OnClick = OpenFileClick
       end
-      object N3: TMenuItem
+      object SaveFile: TMenuItem
         Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+        Enabled = False
         ShortCut = 16467
+        OnClick = SaveFileClick
       end
     end
-    object playerRatings: TMenuItem
+    object PlayerRatings: TMenuItem
       Caption = #1054#1094#1077#1085#1082#1072' '#1080#1075#1088#1086#1082#1086#1074
-      OnClick = playerRatingsClick
+      OnClick = PlayerRatingsClick
+    end
+    object AnalysisButton: TMenuItem
+      Caption = #1040#1085#1072#1083#1080#1079' '#1080#1075#1088#1086#1082#1086#1074' '#1082#1086#1084#1072#1085#1076
+      OnClick = AnalysisButtonClick
     end
   end
   object PopupMenu: TPopupMenu
     Left = 808
     Top = 512
+  end
+  object OpenDialog: TOpenDialog
+    Filter = #1060#1072#1081#1083'|*.dat'
+    Left = 960
+    Top = 408
+  end
+  object SaveDialog: TSaveDialog
+    Filter = #1060#1072#1081#1083'|*.dat'
+    Left = 1032
+    Top = 408
   end
 end
