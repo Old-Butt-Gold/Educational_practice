@@ -8708,7 +8708,7 @@ object MainForm: TMainForm
     Top = 512
   end
   object OpenDialog: TOpenDialog
-    Filter = #1060#1072#1081#1083'|*.dat'
+    Filter = #1060#1072#1081#1083'|*.txt'
     Left = 960
     Top = 408
   end

@@ -314,8 +314,6 @@ begin
         AddForm.ShowModal;
         If AddForm.ModalResult = MrYes Then
             ChangeRowInListView(Item, CurrentNode);
-      // ячейка была выбрана
-      // выполнить необходимые действия
     end;
 end;
 
@@ -482,7 +480,7 @@ Var
     CurrentNode: PTeam;
 begin
     If (Key = VK_DELETE) and (PlayerListView.ItemIndex <> -1) and
-    (MessageBox(MainForm.Handle, 'Вы хотите удалить данную команду?', 'Удаление', MB_YESNO + MB_ICONQUESTION) = ID_YES) Then
+    (MessageBox(MainForm.Handle, 'Вы хотите удалить данного игрока?', 'Удаление', MB_YESNO + MB_ICONQUESTION) = ID_YES) Then
     Begin
         Item := PlayerListView.Selected;
         Index := Item.Index;

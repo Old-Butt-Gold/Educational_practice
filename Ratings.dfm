@@ -46,8 +46,8 @@ object RatingForm: TRatingForm
       end
       item
         Alignment = taCenter
-        AutoSize = True
         Caption = ' '
+        Width = 100
       end
       item
         Alignment = taCenter
