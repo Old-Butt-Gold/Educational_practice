@@ -3,7 +3,7 @@ object AddPlayerForm: TAddPlayerForm
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize, biHelp]
   BorderStyle = bsSingle
-  Caption = 'AddPlayer'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1080#1075#1088#1086#1082#1072
   ClientHeight = 309
   ClientWidth = 645
   Color = clBtnFace

@@ -66,7 +66,6 @@ begin
     list.Tail := nil;
 end;
 
-
 procedure TRatingForm.InsertElement(Var List: TLinkedList; NewRating: TRating);
 var
     NewNode: PAllRating;
@@ -276,6 +275,30 @@ Begin
         TempOutputBest := TempOutputBest^.Next;
         TempOutputWorst := TempOutputWorst^.Next;
         Inc(I);
+    End;
+    If TempOutputBest <> Nil Then
+    Begin
+        Item := ListView1.Items.Add;
+        For I := 0 to ListView1.Columns.Count - 1 do
+            If I = 3 Then
+                Item.SubItems.Add('Топ 10+ игроков')
+            Else
+                Item.SubItems.Add(' ');
+    End;
+    While (TempOutputBest <> Nil) do
+    Begin
+        Item := ListView1.Items.Add;
+        Item.Caption := IntToStr(TempOutputBest.Current.TeamCode);
+        Item.SubItems.Add(TempOutputBest.Current.Code);
+        Item.SubItems.Add(TempOutputBest.Current.FullName);
+        Item.SubItems.Add(IntToStr(TempOutputBest.Current.Score));
+        Item.SubItems.Add(' ');
+        Item.SubItems.Add(IntToStr(TempOutputWorst.Current.TeamCode));
+        Item.SubItems.Add(TempOutputWorst.Current.Code);
+        Item.SubItems.Add(TempOutputWorst.Current.FullName);
+        Item.SubItems.Add(IntToStr(TempOutputWorst.Current.Score));
+        TempOutputBest := TempOutputBest^.Next;
+        TempOutputWorst := TempOutputWorst^.Next;
     End;
 End;
 

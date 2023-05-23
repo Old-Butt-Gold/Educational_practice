@@ -7,8 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.CustomizeDlg,
   Vcl.ToolWin, Vcl.ActnMan, Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ActnColorMaps,
   Vcl.Mask, Vcl.ExtCtrls, Vcl.Buttons, Vcl.CheckLst, Vcl.CategoryButtons,
-  Vcl.ButtonGroup, Vcl.ComCtrls, Vcl.JumpList, CommCtrl, Data.DB, Vcl.Grids,
-  Vcl.DBGrids, Vcl.ControlList, System.ImageList, Vcl.ImgList, Vcl.Menus;
+  Vcl.ButtonGroup, Vcl.ComCtrls, Vcl.JumpList, CommCtrl, Vcl.Menus,
+  Vcl.WinXCtrls, System.ImageList, Vcl.ImgList;
 
 type
 
@@ -68,6 +68,7 @@ type
     AnalysisButton: TMenuItem;
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
+    SplitView1: TSplitView;
     Procedure InsertInList(InsNode: TTeamNode);
     Procedure RemoveTeam(Code: Integer);
     procedure LViewTeamSelectItem(Sender: TObject; Item: TListItem;
@@ -93,6 +94,7 @@ type
     procedure OpenFileClick(Sender: TObject);
     Procedure ClearLinkedList;
     procedure AnalysisButtonClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
       FTeamList: TTeamList;
       FListViewOldWndProc, FPlayerOldWndProc: TWndMethod;
@@ -100,13 +102,10 @@ type
       procedure ListViewNewWndProc2(var Msg: TMessage);
   public
       Property TeamList: TTeamList Read FTeamList;
-
   end;
 
 var
   MainForm: TMainForm;
-
-
 
 implementation
 
@@ -219,6 +218,11 @@ begin
     End;
 end;
 
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    ClearLinkedList;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
     FListViewOldWndProc := LViewTeam.WindowProc;
@@ -272,6 +276,7 @@ begin
             FTeamList.Head := FTeamList.Head^.Next
         Else
             PreviousNode.Next := CurrentNode^.Next;
+
         If CurrentNode = FTeamList.Tail then
             FTeamList.Tail := PreviousNode;
         Dispose(CurrentNode);
@@ -344,7 +349,6 @@ procedure TMainForm.LViewTeamSelectItem(Sender: TObject; Item: TListItem;
 begin
     If Selected Then
     Begin
-        //FCurrentCode := StrToInt(Item.Caption);
         AddPlayerForm.FCurrentNode := FindTeamByCode(StrToInt(Item.Caption));
         PlayerListView.Clear;
         ShowPlayers(AddPlayerForm.FCurrentNode);
@@ -372,8 +376,6 @@ begin
     FTeamList.Tail := nil;
 end;
 
-
-
 procedure TMainForm.OpenFileClick(Sender: TObject);
 Var
     FileInput: File of TAllInfo;
@@ -395,6 +397,7 @@ begin
                     Temp^.Next := Nil;
                     Read(FileInput, Temp^.Info);
                     InsertInList(Temp^);
+                    Dispose(Temp);
                 End;
                 Temp := FTeamList.Head;
                 While Temp <> Nil do
@@ -415,7 +418,6 @@ begin
                 CloseFile(FileInput);
         End;    
     End;
-    
 end;
 
 procedure TMainForm.SaveFileClick(Sender: TObject);
@@ -457,7 +459,6 @@ procedure TMainForm.PlayerListViewDblClick(Sender: TObject);
 var
     Item: TListItem;
     CurrentNode: PTeam;
-    Temp: Integer;
 begin
     Item := PlayerListView.Selected;
     If Assigned(Item) and Item.Selected then

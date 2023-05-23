@@ -18,6 +18,7 @@ object MainForm: TMainForm
   Menu = MainMenu
   OldCreateOrder = False
   Scaled = False
+  OnClose = FormClose
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
@@ -215,6 +216,16 @@ object MainForm: TMainForm
       OnDblClick = PlayerListViewDblClick
       OnKeyDown = PlayerListViewKeyDown
     end
+  end
+  object SplitView1: TSplitView
+    Left = 2
+    Top = 2
+    Width = 0
+    Height = 478
+    Opened = False
+    OpenedWidth = 200
+    Placement = svpLeft
+    TabOrder = 4
   end
   object ImageList1: TImageList
     Height = 128
@@ -8695,7 +8706,7 @@ object MainForm: TMainForm
       end
     end
     object PlayerRatings: TMenuItem
-      Caption = #1054#1094#1077#1085#1082#1072' '#1080#1075#1088#1086#1082#1086#1074
+      Caption = #1056#1077#1081#1090#1080#1085#1075#1086#1074#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
       OnClick = PlayerRatingsClick
     end
     object AnalysisButton: TMenuItem
@@ -8708,7 +8719,7 @@ object MainForm: TMainForm
     Top = 512
   end
   object OpenDialog: TOpenDialog
-    Filter = #1060#1072#1081#1083'|*.txt'
+    Filter = #1060#1072#1081#1083'|*.dat'
     Left = 960
     Top = 408
   end

@@ -3,7 +3,7 @@ object AddForm: TAddForm
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize, biHelp]
   BorderStyle = bsSingle
-  Caption = 'Add Team'
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1084#1072#1085#1076#1091
   ClientHeight = 319
   ClientWidth = 472
   Color = clBtnFace
