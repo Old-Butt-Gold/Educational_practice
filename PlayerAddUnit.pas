@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, MainUnit, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.Buttons;
+  Vcl.Buttons, PngImage, Jpeg;
 
 type
   TAddPlayerForm = class(TForm)
@@ -13,18 +13,17 @@ type
     PlayerCodeEdit: TLabeledEdit;
     PlayerPenaltyEdit: TLabeledEdit;
     PlayerScoreEdit: TLabeledEdit;
-    SBRefresh: TSpeedButton;
     ComboBoxPosition: TComboBox;
     Label1: TLabel;
     AddBtn: TBitBtn;
     ChangeBtn: TBitBtn;
+    Image1: TImage;
     Function NormalizeString(const AStr: String): String;
     procedure PlayerStrKeyPress(Sender: TObject; var Key: Char);
     procedure PlayerCodeEditKeyPress(Sender: TObject; var Key: Char);
     procedure PlayerNameEditKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
     procedure PlayerPenaltyEditKeyPress(Sender: TObject; var Key: Char);
-    procedure SBRefreshClick(Sender: TObject);
     Procedure ClearEdits;
     procedure AddBtnClick(Sender: TObject);
     Procedure SetPlayerFields(Temp: PPlayer);
@@ -33,6 +32,9 @@ type
     Procedure SetPlayerEdits;
     procedure ComboBoxPositionKeyPress(Sender: TObject; var Key: Char);
     procedure ChangeBtnClick(Sender: TObject);
+    procedure PlayerPenaltyEditKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure Image1Click(Sender: TObject);
   private
     { Private declarations }
   public
@@ -103,6 +105,14 @@ begin
         TLabeledEdit(Sender).SelectAll;
 end;
 
+procedure TAddPlayerForm.PlayerPenaltyEditKeyDown(Sender: TObject;
+  var Key: Word; Shift: TShiftState);
+begin
+    If (Shift = [ssCtrl]) and (Key = Ord('A')) then
+        TLabeledEdit(Sender).SelectAll;
+    TEdit(Sender).ReadOnly := (((Shift=[ssShift]) and (Key = VK_INSERT)) or (Shift=[ssCtrl]) or (Shift=[ssAlt]))
+end;
+
 procedure TAddPlayerForm.PlayerPenaltyEditKeyPress(Sender: TObject;
   var Key: Char);
 Var
@@ -167,10 +177,11 @@ Var
     Temp: PPlayer;
 begin
     New(Temp);
+    //Проверка на идентичные
     SetPlayerFields(Temp);
     FCurrentNode^.Info.TeamPlayers[FCurrentIndex] := Temp^;
     Self.Close;
-    ModalResult := AddBtn.ModalResult;
+    ModalResult := MrYes;
     Dispose(Temp);
 end;
 
@@ -178,10 +189,11 @@ procedure TAddPlayerForm.ChangeBtnClick(Sender: TObject);
 Var
     Temp: PPlayer;
 begin
+    //Проверка на изменение и на идентичный код
     Temp := @FCurrentNode^.Info.TeamPlayers[FCurrentIndex];
     SetPlayerFields(Temp);
     Self.Close;
-    ModalResult := AddBtn.ModalResult;
+    ModalResult := MrYes;
 end;
 
 Procedure TAddPlayerForm.ClearEdits;
@@ -204,7 +216,7 @@ begin
     ClearEdits;
 end;
 
-procedure TAddPlayerForm.SBRefreshClick(Sender: TObject);
+procedure TAddPlayerForm.Image1Click(Sender: TObject);
 begin
     ClearEdits;
 end;

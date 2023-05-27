@@ -227,11 +227,51 @@ object MainForm: TMainForm
     Placement = svpLeft
     TabOrder = 4
   end
+  object MainMenu: TMainMenu
+    Left = 904
+    Top = 416
+    object N1: TMenuItem
+      Caption = #1060#1072#1081#1083
+      object OpenFile: TMenuItem
+        Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
+        ShortCut = 16463
+        OnClick = OpenFileClick
+      end
+      object SaveFile: TMenuItem
+        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074' '#1092#1072#1081#1083
+        Enabled = False
+        ShortCut = 16467
+        OnClick = SaveFileClick
+      end
+    end
+    object PlayerRatings: TMenuItem
+      Caption = #1056#1077#1081#1090#1080#1085#1075#1086#1074#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
+      OnClick = PlayerRatingsClick
+    end
+    object AnalysisButton: TMenuItem
+      Caption = #1040#1085#1072#1083#1080#1079' '#1080#1075#1088#1086#1082#1086#1074' '#1082#1086#1084#1072#1085#1076
+      OnClick = AnalysisButtonClick
+    end
+  end
+  object PopupMenu: TPopupMenu
+    Left = 808
+    Top = 512
+  end
+  object OpenDialog: TOpenDialog
+    Filter = #1060#1072#1081#1083'|*.dat'
+    Left = 960
+    Top = 408
+  end
+  object SaveDialog: TSaveDialog
+    Filter = #1060#1072#1081#1083'|*.dat'
+    Left = 1032
+    Top = 408
+  end
   object ImageList1: TImageList
     Height = 128
     Width = 128
-    Left = 664
-    Top = 544
+    Left = 776
+    Top = 360
     Bitmap = {
       494C010101000800040080008000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000000200008000000001002000000000000000
@@ -8687,45 +8727,5 @@ object MainForm: TMainForm
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       000000000000}
-  end
-  object MainMenu: TMainMenu
-    Left = 904
-    Top = 416
-    object N1: TMenuItem
-      Caption = #1060#1072#1081#1083
-      object OpenFile: TMenuItem
-        Caption = #1054#1090#1082#1088#1099#1090#1100' '#1092#1072#1081#1083
-        ShortCut = 16463
-        OnClick = OpenFileClick
-      end
-      object SaveFile: TMenuItem
-        Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1074' '#1092#1072#1081#1083
-        Enabled = False
-        ShortCut = 16467
-        OnClick = SaveFileClick
-      end
-    end
-    object PlayerRatings: TMenuItem
-      Caption = #1056#1077#1081#1090#1080#1085#1075#1086#1074#1072#1103' '#1090#1072#1073#1083#1080#1094#1072
-      OnClick = PlayerRatingsClick
-    end
-    object AnalysisButton: TMenuItem
-      Caption = #1040#1085#1072#1083#1080#1079' '#1080#1075#1088#1086#1082#1086#1074' '#1082#1086#1084#1072#1085#1076
-      OnClick = AnalysisButtonClick
-    end
-  end
-  object PopupMenu: TPopupMenu
-    Left = 808
-    Top = 512
-  end
-  object OpenDialog: TOpenDialog
-    Filter = #1060#1072#1081#1083'|*.dat'
-    Left = 960
-    Top = 408
-  end
-  object SaveDialog: TSaveDialog
-    Filter = #1060#1072#1081#1083'|*.dat'
-    Left = 1032
-    Top = 408
   end
 end

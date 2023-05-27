@@ -189,7 +189,7 @@ begin
     // Ѕазовый случай: если список пуст или состоит из одного элемента,
     // он уже отсортирован.
     if (headPtr = nil) or (headPtr^.Next = nil) then
-      Exit;
+        Exit;
 
     // –аздел€ем список на две половины.
     SplitLinkedList(headPtr, firstHalf, secondHalf);

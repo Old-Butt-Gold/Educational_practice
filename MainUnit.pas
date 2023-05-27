@@ -3,12 +3,10 @@ unit MainUnit;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.CustomizeDlg,
-  Vcl.ToolWin, Vcl.ActnMan, Vcl.ActnCtrls, Vcl.ActnMenus, Vcl.ActnColorMaps,
-  Vcl.Mask, Vcl.ExtCtrls, Vcl.Buttons, Vcl.CheckLst, Vcl.CategoryButtons,
-  Vcl.ButtonGroup, Vcl.ComCtrls, Vcl.JumpList, CommCtrl, Vcl.Menus,
-  Vcl.WinXCtrls, System.ImageList, Vcl.ImgList;
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
+  Vcl.ComCtrls, CommCtrl, Vcl.Menus, Vcl.WinXCtrls, PngImage, Jpeg,
+  System.ImageList, Vcl.ImgList;
 
 type
 
@@ -57,7 +55,6 @@ type
     PlayerListView: TListView;
     PanelPlayers: TPanel;
     Label2: TLabel;
-    ImageList1: TImageList;
     AddPlayerBtn: TBitBtn;
     MainMenu: TMainMenu;
     PopupMenu: TPopupMenu;
@@ -69,6 +66,7 @@ type
     OpenDialog: TOpenDialog;
     SaveDialog: TSaveDialog;
     SplitView1: TSplitView;
+    ImageList1: TImageList;
     Procedure InsertInList(InsNode: TTeamNode);
     Procedure RemoveTeam(Code: Integer);
     procedure LViewTeamSelectItem(Sender: TObject; Item: TListItem;
@@ -411,7 +409,8 @@ begin
                 End;
                 SaveFile.Enabled := True;
             Except
-                MessageBox(Handle, 'Файл некорректен!', 'Внимание!', MB_OK + MB_ICONWARNING);
+                MessageBox(Handle, 'Файл некорректен!'#13#10 + 'Проверьте, чтобы ваш файл имел расширение .dat и содержал поля данных: '#13#10
+                + '1. Code: Integer'#13#10 + '2. Rank: Integer'#13#10 + '3. Name: String[25]'#13#10 + '4. Country: String[25]', 'Внимание!', MB_OK + MB_ICONWARNING);
             End;
         Finally
             If FileExists(ChangeFileExt(SaveDialog.FileName, '.dat')) Then

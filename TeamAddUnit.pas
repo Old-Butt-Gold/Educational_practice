@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Mask, Vcl.ExtCtrls,
-  Vcl.Buttons, MainUnit, Vcl.CheckLst, Vcl.ComCtrls;
+  Vcl.Buttons, MainUnit, Vcl.CheckLst, Vcl.ComCtrls, PngImage, Jpeg;
 
 type
   TAddForm = class(TForm)
@@ -15,14 +15,13 @@ type
     TeamRankEdit: TLabeledEdit;
     AddBtn: TBitBtn;
     InfoLabel: TLabel;
-    SBRefresh: TSpeedButton;
     ChangeBtn: TBitBtn;
+    Image1: TImage;
     procedure StrKeyPress(Sender: TObject; var Key: Char);
     procedure LabeledEditChange(Sender: TObject);
     procedure NumberPress(Sender: TObject; var Key: Char);
     procedure LabeledEditKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
-    procedure SpeedButtonClick(Sender: TObject);
     procedure AddBtnClick(Sender: TObject);
     Procedure ClearEdits;
     Function NormalizeString(const AStr: String): String;
@@ -32,6 +31,9 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     Function IsSimilarTeam(Head, Temp: PTeam): Boolean;
     Function WasNotChanged(Temp: PTeam): Boolean;
+    procedure TeamCodeEditKeyDown(Sender: TObject; var Key: Word;
+      Shift: TShiftState);
+    procedure Image1Click(Sender: TObject);
   private
       FCurrentPointer: PTeam;
   public
@@ -154,11 +156,6 @@ begin
     ClearEdits;
 end;
 
-procedure TAddForm.SpeedButtonClick(Sender: TObject);
-begin
-    ClearEdits;
-end;
-
 Function TAddForm.NormalizeString(const AStr: String): String;
 Var
     LowerStr, RestOfString: String;
@@ -169,6 +166,11 @@ Begin
     RestOfString := Copy(LowerStr, 2, Length(LowerStr) - 1);
     NormalizeString := FirstLetter + RestOfString;
 End;
+
+procedure TAddForm.Image1Click(Sender: TObject);
+begin
+    ClearEdits;
+end;
 
 Function TAddForm.IsSimilarTeam(Head, Temp: PTeam): Boolean;
 Var
@@ -233,6 +235,14 @@ begin
         Key := #0;
     If (Length(TEdit(Sender).Text) = 25) and (Key <> #08) Then
         Key := #0;
+end;
+
+procedure TAddForm.TeamCodeEditKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+    If (Shift = [ssCtrl]) and (Key = Ord('A')) then
+        TLabeledEdit(Sender).SelectAll;
+    TEdit(Sender).ReadOnly := (((Shift=[ssShift]) and (Key = VK_INSERT)) or (Shift=[ssCtrl]) or (Shift=[ssAlt]));
 end;
 
 end.
